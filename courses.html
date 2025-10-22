@@ -735,7 +735,13 @@
 
                 const courseCard = document.createElement('div');
                 courseCard.className = 'course-card';
-                courseCard.onclick = () => isAccessible ? openCourseModal(course) : showUpgradeMessage();
+                if (course.id === 1) {
+                    // Le cours SCA (id=1) redirige vers la page détail complète
+                    courseCard.onclick = () => isAccessible ? window.location.href = 'course-detail.html' : showUpgradeMessage();
+                } else {
+                    // Les autres cours s'ouvrent en modal
+                    courseCard.onclick = () => isAccessible ? openCourseModal(course) : showUpgradeMessage();
+                }
                 courseCard.innerHTML = `
                     <div class="course-thumbnail ${course.is_free ? 'free' : ''}">
                         ${course.thumbnail}
