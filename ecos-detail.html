@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiche ECOS - MedFormation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #F9FAFB;
+            color: #374151;
+            line-height: 1.7;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            color: #2563EB;
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 73px;
+            bottom: 0;
+            width: 260px;
+            background: white;
+            border-right: 1px solid #E5E7EB;
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #6B7280;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: #F9FAFB;
+            color: #2563EB;
+        }
+
+        .nav-item.active {
+            background: #EFF6FF;
+            color: #2563EB;
+            border-right: 3px solid #2563EB;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #2563EB;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .back-button:hover {
+            text-decoration: underline;
+        }
+
+        .ecos-header {
+            background: linear-gradient(135deg, #2563EB 0%, #1d4ed8 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+        }
+
+        .ecos-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .ecos-icon {
+            font-size: 48px;
+        }
+
+        .ecos-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            opacity: 0.9;
+            flex-wrap: wrap;
+        }
+
+        .ecos-meta span {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .ecos-content {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid #E5E7EB;
+        }
+
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #2563EB;
+        }
+
+        .section h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+            margin-top: 24px;
+            margin-bottom: 16px;
+        }
+
+        .section p {
+            margin-bottom: 16px;
+            color: #6B7280;
+            line-height: 1.8;
+        }
+
+        .highlight-box {
+            background: #FEF3C7;
+            border-left: 4px solid #F59E0B;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .highlight-box h4 {
+            color: #B45309;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .highlight-box p {
+            color: #92400E;
+        }
+
+        .important-box {
+            background: #ECFDF5;
+            border-left: 4px solid #10B981;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .important-box h4 {
+            color: #065F46;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .important-box p {
+            color: #047857;
+        }
+
+        .danger-box {
+            background: #FEF2F2;
+            border-left: 4px solid #EF4444;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .danger-box h4 {
+            color: #991B1B;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .danger-box p {
+            color: #7F1D1D;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #EFF6FF;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #111827;
+            border-bottom: 2px solid #2563EB;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #E5E7EB;
+            color: #6B7280;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #F9FAFB;
+        }
+
+        .evaluation-grid {
+            background: #F9FAFB;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+
+        .evaluation-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .evaluation-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .evaluation-points {
+            background: #2563EB;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .evaluation-details h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .evaluation-details p {
+            font-size: 14px;
+            color: #6B7280;
+        }
+
+        .mistakes-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .mistakes-list li {
+            padding: 12px 0;
+            padding-left: 28px;
+            color: #6B7280;
+            position: relative;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .mistakes-list li:last-child {
+            border-bottom: none;
+        }
+
+        .mistakes-list li::before {
+            content: "⚠️";
+            position: absolute;
+            left: 0;
+            font-size: 16px;
+        }
+
+        .competencies-badge {
+            display: inline-block;
+            background: #EFF6FF;
+            color: #2563EB;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 6px 6px 6px 0;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin: 6px 6px 6px 0;
+        }
+
+        .difficulty-easy {
+            background: #ECFDF5;
+            color: #065F46;
+        }
+
+        .difficulty-medium {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .difficulty-hard {
+            background: #FEF2F2;
+            color: #991B1B;
+        }
+
+        .download-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid #E5E7EB;
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #2563EB;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            background: #E5E7EB;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #D1D5DB;
+        }
+
+        .btn-success {
+            background: #10B981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .ecos-header {
+                padding: 24px;
+            }
+
+            .ecos-header h1 {
+                font-size: 24px;
+            }
+
+            .section h2 {
+                font-size: 22px;
+            }
+
+            .ecos-content {
+                padding: 20px;
+            }
+
+            .evaluation-item {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .evaluation-points {
+                width: 50px;
+                height: 50px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="dashboard.html" class="logo">🏥 MedFormation</a>
+    </header>
+
+    <aside class="sidebar">
+        <a href="dashboard.html" class="nav-item">
+            <span>🏠</span> Dashboard
+        </a>
+        <a href="courses.html" class="nav-item">
+            <span>📚</span> Cours
+        </a>
+        <a href="qcm.html" class="nav-item">
+            <span>✏️</span> QCM
+        </a>
+        <a href="ecos.html" class="nav-item active">
+            <span>🎯</span> ECOS
+        </a>
+        <a href="progress.html" class="nav-item">
+            <span>📊</span> Progression
+        </a>
+        <a href="account.html" class="nav-item">
+            <span>⚙️</span> Mon Compte
+        </a>
+    </aside>
+
+    <main class="main-content">
+        <a href="ecos.html" class="back-button">← Retour aux fiches ECOS</a>
+
+        <div class="ecos-header" id="ecosHeader">
+            <h1>
+                <span class="ecos-icon" id="ecosIcon">🎯</span>
+                <span id="ecosTitle">Fiche ECOS</span>
+            </h1>
+            <div class="ecos-meta">
+                <span id="ecosSpecialty">Spécialité</span>
+                <span id="ecosCompetency">Compétence</span>
+                <span id="ecosDifficulty">Difficulté</span>
+            </div>
+        </div>
+
+        <div class="ecos-content">
+            <!-- SECTION 1 : CONTEXTE -->
+            <div class="section">
+                <h2>🏥 Contexte clinique</h2>
+                <p id="ecosContext">Contexte de la station...</p>
+            </div>
+
+            <!-- SECTION 2 : OBJECTIFS -->
+            <div class="section">
+                <h2>🎯 Objectifs de la station</h2>
+                <p id="ecosObjectives">Objectifs pédagogiques...</p>
+                <div class="important-box">
+                    <h4>Compétences ciblées</h4>
+                    <div id="ecosCompetencies">
+                        <!-- Compétences seront insérées ici -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3 : DÉROULEMENT -->
+            <div class="section">
+                <h2>📋 Déroulement de la station</h2>
+                <table>
+                    <tr>
+                        <th>Phase</th>
+                        <th>Durée</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Préparation</strong></td>
+                        <td>2 min</td>
+                        <td>Lecture du dossier patient et des instructions</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Interaction</strong></td>
+                        <td>8 min</td>
+                        <td>Consultation avec l'acteur jouant le rôle du patient</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Documentation</strong></td>
+                        <td>5 min</td>
+                        <td>Rédaction d'un résumé ou ordonnance si nécessaire</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- SECTION 4 : GRILLE D'ÉVALUATION -->
+            <div class="section">
+                <h2>📊 Grille d'évaluation (20 points)</h2>
+                <div class="evaluation-grid" id="ecosGrille">
+                    <!-- La grille sera insérée ici par JavaScript -->
+                </div>
+            </div>
+
+            <!-- SECTION 5 : PIÈGES COURANTS -->
+            <div class="section">
+                <h2>⚠️ Pièges à éviter</h2>
+                <div class="danger-box">
+                    <h4>Erreurs fréquemment observées</h4>
+                    <ul class="mistakes-list" id="ecosMistakes">
+                        <!-- Les pièges seront insérés ici -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SECTION 6 : CONSEILS DE RÉUSSITE -->
+            <div class="section">
+                <h2>💡 Conseils de réussite</h2>
+                <div class="highlight-box">
+                    <h4>Clés du succès</h4>
+                    <ul style="list-style: disc; margin-left: 20px; color: #92400E;">
+                        <li>Organiser votre pensée avant de parler</li>
+                        <li>Écouter activement le patient/l'examinateur</li>
+                        <li>Adapter votre communication au public</li>
+                        <li>Respecter la gestion du temps</li>
+                        <li>Montrer de l'empathie et du professionnalisme</li>
+                        <li>Justifier chacune de vos décisions</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SECTION 7 : RESSOURCES -->
+            <div class="section">
+                <h2>📚 Ressources complémentaires</h2>
+                <div class="important-box">
+                    <h4>Contenus recommandés</h4>
+                    <ul style="list-style: disc; margin-left: 20px; color: #047857;">
+                        <li><strong>Cours vidéo :</strong> Consultez les cours correspondants dans votre bibliothèque</li>
+                        <li><strong>QCM thématiques :</strong> Réviser avec les questions liées à cette compétence</li>
+                        <li><strong>Cas cliniques :</strong> Pratiquer sur plusieurs scénarios similaires</li>
+                        <li><strong>Feedback expert :</strong> Demander un retour sur votre performance</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SECTION 8 : ACTIONS -->
+            <div class="download-section">
+                <button class="btn btn-primary" onclick="markAsStudied()">✅ Marquer comme étudié</button>
+                <button class="btn btn-secondary" onclick="printPage()">🖨️ Imprimer</button>
+                <button class="btn btn-success" onclick="shareECOS()">📤 Partager</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Vérifier connexion
+        if (!localStorage.getItem('isLoggedIn')) {
+            window.location.href = 'login.html';
+        }
+
+        // Récupérer l'ID du ECOS depuis l'URL
+        const params = new URLSearchParams(window.location.search);
+        const ecosId = params.get('id');
+
+        // Base de données ECOS (même que dans ecos.html)
+        const ecosDatabase = [
+            {
+                id: 1,
+                title: "Consultation d'annonce - Infarctus du myocarde",
+                specialty: "Cardiologie",
+                competency: "Communication",
+                difficulty: "Moyen",
+                icon: "💬",
+                is_free: true,
+                context: "Patient de 58 ans hospitalisé pour IDM depuis 2 jours. Vous devez lui annoncer le diagnostic définitif et expliquer les conséquences en termes de pronostic et de prise en charge future.",
+                objectives: "Annoncer un diagnostic grave de manière structurée, évaluer la compréhension du patient et son soutien familial, proposer un plan de prise en charge adapté, permettre au patient d'exprimer ses craintes.",
+                mistakes: [
+                    "Annoncer brutalement sans préparation",
+                    "Utiliser un jargon médical sans explications",
+                    "Ne pas laisser le patient s'exprimer",
+                    "Oublier de questionner sur le soutien familial",
+                    "Surcharger le patient d'informations",
+                    "Ignorer l'impact psychologique du diagnostic"
+                ],
+                grille: [
+                    { item: "Accueil et climat de confiance", points: 2 },
+                    { item: "Vérification des connaissances antérieures", points: 1 },
+                    { item: "Annonce progressive du diagnostic", points: 3 },
+                    { item: "Utilisation d'un langage adapté", points: 2 },
+                    { item: "Évaluation de la compréhension", points: 2 },
+                    { item: "Exploration des émotions et craintes", points: 2 },
+                    { item: "Information sur le pronostic et le traitement", points: 3 },
+                    { item: "Exploration du soutien social", points: 2 },
+                    { item: "Plan de suivi proposé", points: 1 }
+                ]
+            },
+            {
+                id: 2,
+                title: "Examen cardiovasculaire complet",
+                specialty: "Cardiologie",
+                competency: "Examen clinique",
+                difficulty: "Moyen",
+                icon: "🩺",
+                is_free: true,
+                context: "Patient de 65 ans consultant pour dyspnée d'effort progressive. Réaliser un examen cardiovasculaire complet.",
+                objectives: "Réaliser un examen cardiovasculaire systématique et complet, identifier les signes d'insuffisance cardiaque, d'arythmie ou de valvulopathie, intégrer les données dans une démarche diagnostique.",
+                mistakes: [
+                    "Oublier la position assise à 45°",
+                    "Ne pas ausculter les 4 foyers",
+                    "Ignorer les œdèmes des membres inférieurs",
+                    "Ne pas tester la manœuvre abdominale",
+                    "Manquer les signes de turgescence jugulaire"
+                ],
+                grille: [
+                    { item: "Inspection générale", points: 1 },
+                    { item: "Palpation des pouls périphériques", points: 2 },
+                    { item: "Mesure de la pression artérielle", points: 1 },
+                    { item: "Auscultation aux 4 foyers", points: 3 },
+                    { item: "Manœuvre de Valsalva", points: 1 },
+                    { item: "Recherche de turgescence jugulaire", points: 2 },
+                    { item: "Palpation de l'abdomen (hépatomégalie)", points: 2 },
+                    { item: "Recherche d'œdèmes", points: 2 },
+                    { item: "Synthèse diagnostic", points: 3 }
+                ]
+            },
+            {
+                id: 3,
+                title: "Interprétation d'ECG en urgence - SCA",
+                specialty: "Cardiologie",
+                competency: "Raisonnement",
+                difficulty: "Difficile",
+                icon: "📈",
+                is_free: false,
+                context: "Patient de 52 ans aux urgences pour douleur thoracique depuis 30 min. ECG d'admission montrant sus-décalage du segment ST en antérieur.",
+                objectives: "Interpréter l'ECG correctement, identifier le type et la localisation du SCA, proposer la prise en charge immédiate, expliquer le circuit thérapeutique.",
+                mistakes: [
+                    "Confondre sus-décalage et sous-décalage du ST",
+                    "Oublier les dérivations postérieures (V7-V9)",
+                    "Ne pas vérifier l'infarctus du VD",
+                    "Hésiter sur la décision thérapeutique",
+                    "Retarder la prise en charge en attendant des tests supplémentaires"
+                ],
+                grille: [
+                    { item: "Identification du sus-décalage ST", points: 2 },
+                    { item: "Localisation du SCA", points: 2 },
+                    { item: "Recherche de complications", points: 2 },
+                    { item: "Diagnostic différentiel", points: 2 },
+                    { item: "Décision de l'orientation", points: 3 },
+                    { item: "Communication urgence-coro", points: 2 },
+                    { item: "Traitement initial", points: 2 },
+                    { item: "Explication au patient", points: 3 }
+                ]
+            },
+            {
+                id: 4,
+                title: "Pose de voie veineuse périphérique",
+                specialty: "Cardiologie",
+                competency: "Geste technique",
+                difficulty: "Facile",
+                icon: "💉",
+                is_free: true,
+                context: "Patient nécessitant une VVP pour traitement intraveineux de morphine et anticoagulation.",
+                objectives: "Poser une voie veineuse périphérique en respectant les règles d'asepsie et de sécurité, sécuriser la voie.",
+                mistakes: [
+                    "Oublier l'hygiène des mains",
+                    "Ne pas désinfecter le site de ponction",
+                    "Ponctionner une zone d'hématome",
+                    "Laisser l'aiguille apparente",
+                    "Ne pas assurer la perméabilité de la voie"
+                ],
+                grille: [
+                    { item: "Information au patient", points: 1 },
+                    { item: "Hygiène des mains", points: 1 },
+                    { item: "Choix du site approprié", points: 1 },
+                    { item: "Désinfection du site", points: 2 },
+                    { item: "Technique de ponction", points: 3 },
+                    { item: "Retrait correct de l'aiguille", points: 2 },
+                    { item: "Fixation de la voie", points: 2 },
+                    { item: "Vérification de la perméabilité", points: 1 },
+                    { item: "Documentation", points: 2 }
+                ]
+            },
+            {
+                id: 5,
+                title: "Prise en charge de l'arrêt cardio-respiratoire",
+                specialty: "Cardiologie",
+                competency: "Urgence",
+                difficulty: "Difficile",
+                icon: "🚨",
+                is_free: false,
+                context: "Patient s'effondre devant vous aux urgences. Pas de pouls, pas de respiration. Vous êtes en équipe de 3 personnes.",
+                objectives: "Débuter une RCP de qualité, organiser l'équipe, utiliser le DEA, assurer la ventilation et le massage.",
+                mistakes: [
+                    "Retarder le début de la RCP",
+                    "Compressions thoraciques insuffisantes (< 5 cm)",
+                    "RCP trop rapide (> 120/min)",
+                    "Oublier le DEA",
+                    "Fatigue du réanimateur non gérée"
+                ],
+                grille: [
+                    { item: "Vérification de l'état de conscience", points: 1 },
+                    { item: "Appel de secours", points: 1 },
+                    { item: "Positionnement du patient", points: 1 },
+                    { item: "Qualité du massage cardiaque", points: 3 },
+                    { item: "Fréquence des compressions (100-120)", points: 2 },
+                    { item: "Ventilation appropriée", points: 2 },
+                    { item: "Utilisation du DEA", points: 3 },
+                    { item: "Rotation de l'équipe", points: 2 },
+                    { item: "Continuité de la RCP", points: 2 }
+                ]
+            }
+        ];
+
+        // Charger le ECOS correspondant
+        function loadECOS() {
+            const ecos = ecosDatabase.find(e => e.id == ecosId);
+            
+            if (!ecos) {
+                document.body.innerHTML = '<h1 style="text-align: center; margin-top: 50px;">Fiche ECOS non trouvée</h1>';
+                return;
+            }
+
+            // Mettre à jour le header
+            document.getElementById('ecosIcon').textContent = ecos.icon;
+            document.getElementById('ecosTitle').textContent = ecos.title;
+            document.getElementById('ecosSpecialty').textContent = '📍 ' + ecos.specialty;
+            document.getElementById('ecosCompetency').textContent = '🎓 ' + ecos.competency;
+            document.getElementById('ecosDifficulty').innerHTML = '<span class="difficulty-badge difficulty-' + (ecos.difficulty === 'Facile' ? 'easy' : ecos.difficulty === 'Moyen' ? 'medium' : 'hard') + '">' + ecos.difficulty + '</span>';
+
+            // Mettre à jour le contenu
+            document.getElementById('ecosContext').textContent = ecos.context;
+            document.getElementById('ecosObjectives').textContent = ecos.objectives;
+
+            // Compétences
+            const competenciesDiv = document.getElementById('ecosCompetencies');
+            competenciesDiv.innerHTML = '';
+            const competencies = [ecos.competency, 'Professionnalisme', 'Gestion du temps'];
+            competencies.forEach(comp => {
+                const badge = document.createElement('span');
+                badge.className = 'competencies-badge';
+                badge.textContent = comp;
+                competenciesDiv.appendChild(badge);
+            });
+
+            // Grille d'évaluation
+            const grilleDiv = document.getElementById('ecosGrille');
+            grilleDiv.innerHTML = '';
+            let totalPoints = 0;
+            ecos.grille.forEach(item => {
+                totalPoints += item.points;
+                const div = document.createElement('div');
+                div.className = 'evaluation-item';
+                div.innerHTML = `
+                    <div class="evaluation-points">${item.points}</div>
+                    <div class="evaluation-details">
+                        <h4>${item.item}</h4>
+                        <p>Critère d'évaluation important pour cette station</p>
+                    </div>
+                `;
+                grilleDiv.appendChild(div);
+            });
+
+            // Pièges
+            const mistakesDiv = document.getElementById('ecosMistakes');
+            mistakesDiv.innerHTML = '';
+            ecos.mistakes.forEach(mistake => {
+                const li = document.createElement('li');
+                li.textContent = mistake;
+                mistakesDiv.appendChild(li);
+            });
+
+            // Vérifier accès premium
+            const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            if (!ecos.is_free && currentUser.subscription_status !== 'active') {
+                document.querySelector('.ecos-content').innerHTML = '<div style="text-align: center; padding: 60px 20px;"><h2>🔒 Contenu Premium</h2><p>Cette fiche ECOS est réservée aux utilisateurs premium.</p><a href="pricing.html" class="btn btn-primary" style="margin-top: 20px;">Découvrir nos offres</a></div>';
+                return;
+            }
+        }
+
+        // Marquer comme étudié
+        function markAsStudied() {
+            let studied = JSON.parse(localStorage.getItem('studiedEcos') || '[]');
+            if (!studied.includes(ecosId)) {
+                studied.push(ecosId);
+                localStorage.setItem('studiedEcos', JSON.stringify(studied));
+            }
+            alert('✅ Fiche marquée comme étudiée !');
+        }
+
+        // Imprimer
+        function printPage() {
+            window.print();
+        }
+
+        // Partager
+        function shareECOS() {
+            const text = 'Découvrez cette fiche ECOS sur MedFormation : ' + window.location.href;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Fiche ECOS',
+                    text: text
+                });
+            } else {
+                navigator.clipboard.writeText(text);
+                alert('Lien copié dans le presse-papiers !');
+            }
+        }
+
+        // Charger le ECOS à l'ouverture
+        loadECOS();
+    </script>
+</body>
+</html>
