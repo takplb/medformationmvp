@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ma Progression - MedFormation</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #F9FAFB;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            color: #2563EB;
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #2563EB;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 73px;
+            bottom: 0;
+            width: 260px;
+            background: white;
+            border-right: 1px solid #E5E7EB;
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #6B7280;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: #F9FAFB;
+            color: #2563EB;
+        }
+
+        .nav-item.active {
+            background: #EFF6FF;
+            color: #2563EB;
+            border-right: 3px solid #2563EB;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 32px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #6B7280;
+            font-size: 16px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #E5E7EB;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .stat-icon.blue {
+            background: #EFF6FF;
+            color: #2563EB;
+        }
+
+        .stat-icon.green {
+            background: #ECFDF5;
+            color: #10B981;
+        }
+
+        .stat-icon.orange {
+            background: #FEF3C7;
+            color: #F59E0B;
+        }
+
+        .stat-icon.purple {
+            background: #F3E8FF;
+            color: #A855F7;
+        }
+
+        .stat-icon.red {
+            background: #FEF2F2;
+            color: #EF4444;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6B7280;
+        }
+
+        .stat-change {
+            font-size: 13px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .stat-change.positive {
+            color: #10B981;
+        }
+
+        .stat-change.negative {
+            color: #EF4444;
+        }
+
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #E5E7EB;
+        }
+
+        .chart-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-bottom: 16px;
+        }
+
+        .recommendations-section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #E5E7EB;
+            margin-bottom: 32px;
+        }
+
+        .recommendations-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 20px;
+        }
+
+        .recommendation-item {
+            background: #F9FAFB;
+            border-left: 4px solid #2563EB;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .recommendation-item h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .recommendation-item p {
+            font-size: 14px;
+            color: #6B7280;
+            line-height: 1.6;
+        }
+
+        .recommendation-item.warning {
+            border-left-color: #F59E0B;
+            background: #FFFBEB;
+        }
+
+        .recommendation-item.success {
+            border-left-color: #10B981;
+            background: #F0FDF4;
+        }
+
+        .progress-bar-container {
+            margin-bottom: 20px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #E5E7EB;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2563EB 0%, #1d4ed8 100%);
+            transition: width 0.3s ease;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #2563EB;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            background: #E5E7EB;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #D1D5DB;
+        }
+
+        .activity-feed {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #E5E7EB;
+        }
+
+        .activity-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 20px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .activity-icon.course {
+            background: #EFF6FF;
+            color: #2563EB;
+        }
+
+        .activity-icon.qcm {
+            background: #F3E8FF;
+            color: #A855F7;
+        }
+
+        .activity-icon.ecos {
+            background: #ECFDF5;
+            color: #10B981;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+            }
+
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="dashboard.html" class="logo">🏥 MedFormation</a>
+        <div class="user-avatar" id="userAvatar">SM</div>
+    </header>
+
+    <aside class="sidebar">
+        <a href="dashboard.html" class="nav-item">
+            <span>🏠</span> Dashboard
+        </a>
+        <a href="courses.html" class="nav-item">
+            <span>📚</span> Cours
+        </a>
+        <a href="qcm.html" class="nav-item">
+            <span>✏️</span> QCM
+        </a>
+        <a href="ecos.html" class="nav-item">
+            <span>🎯</span> ECOS
+        </a>
+        <a href="progress.html" class="nav-item active">
+            <span>📊</span> Progression
+        </a>
+        <a href="account.html" class="nav-item">
+            <span>⚙️</span> Mon Compte
+        </a>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>📊 Ma Progression</h1>
+            <p>Suivez votre évolution et identifiez vos points forts et faibles</p>
+        </div>
+
+        <!-- Statistiques principales -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">📹</div>
+                <div class="stat-value" id="videosWatched">0</div>
+                <div class="stat-label">Vidéos visionnées</div>
+                <div class="stat-change positive">↑ +2 cette semaine</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon purple">✏️</div>
+                <div class="stat-value" id="qcmCompleted">0</div>
+                <div class="stat-label">QCM complétés</div>
+                <div class="stat-change positive">↑ +15 cette semaine</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">📊</div>
+                <div class="stat-value" id="avgScore">0<span style="font-size: 16px;">%</span></div>
+                <div class="stat-label">Taux de réussite moyen</div>
+                <div class="stat-change positive">↑ +5% ce mois</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">🔥</div>
+                <div class="stat-value" id="streak">0</div>
+                <div class="stat-label">Jours consécutifs</div>
+                <div class="stat-change positive">🎯 Continuez !</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon blue">🎯</div>
+                <div class="stat-value" id="ecosStudied">0</div>
+                <div class="stat-label">Fiches ECOS étudiées</div>
+                <div class="stat-change positive">↑ +3 cette semaine</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon red">⏱️</div>
+                <div class="stat-value">4.5<span style="font-size: 16px;">h</span></div>
+                <div class="stat-label">Temps total d'étude</div>
+                <div class="stat-change positive">↑ +1.2h cette semaine</div>
+            </div>
+        </div>
+
+        <!-- Graphiques -->
+        <div class="charts-section">
+            <div class="chart-card">
+                <div class="chart-title">📈 Évolution de vos scores</div>
+                <div class="chart-container">
+                    <canvas id="scoresChart"></canvas>
+                </div>
+                <p style="font-size: 13px; color: #6B7280; text-align: center;">Derniers 7 jours</p>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">🎓 Performance par spécialité</div>
+                <div class="chart-container">
+                    <canvas id="specialtyChart"></canvas>
+                </div>
+                <p style="font-size: 13px; color: #6B7280; text-align: center;">Taux de réussite</p>
+            </div>
+        </div>
+
+        <!-- Progression détaillée par type d'apprentissage -->
+        <div class="recommendations-section" style="background: white;">
+            <div class="recommendations-title">📚 Progression par module</div>
+
+            <div class="progress-bar-container">
+                <div class="progress-label">
+                    <span>Vidéos de cours</span>
+                    <span id="coursesPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="coursesFill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-label">
+                    <span>QCM d'entraînement</span>
+                    <span id="qcmPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="qcmFill" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-label">
+                    <span>Fiches ECOS</span>
+                    <span id="ecosPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="ecosFill" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommandations -->
+        <div class="recommendations-section">
+            <div class="recommendations-title">💡 Recommandations personnalisées</div>
+
+            <div class="recommendation-item success">
+                <h3>🌟 Excellent travail en Cardiologie !</h3>
+                <p>Vous maîtrisez bien les bases de la cardiologie. Continuez avec le module SCA avancé pour progresser vers les cas complexes.</p>
+            </div>
+
+            <div class="recommendation-item warning">
+                <h3>📊 Renforcez votre compréhension de l'ECG</h3>
+                <p>Vos scores en interprétation d'ECG sont en dessous de la moyenne (65%). Nous vous recommandons de revoir le cours "ECG en urgence - SCA" et de faire 20 QCM supplémentaires.</p>
+            </div>
+
+            <div class="recommendation-item warning">
+                <h3>⏰ Restez actif régulièrement</h3>
+                <p>La cohérence est la clé. Travaillez 30-45 min chaque jour plutôt que 4h d'un coup. Cela optimise la mémorisation grâce à la répétition espacée.</p>
+            </div>
+
+            <div class="recommendation-item success">
+                <h3>🎯 Prêt pour les fiches ECOS</h3>
+                <p>Vous avez complété suffisamment de cours pour débuter les stations ECOS. Commencez par les stations de communication pour bâtir la confiance.</p>
+            </div>
+        </div>
+
+        <!-- Activité récente -->
+        <div class="activity-feed">
+            <div class="activity-title">📅 Activité récente</div>
+
+            <div class="activity-item">
+                <div class="activity-icon course">📹</div>
+                <div class="activity-content">
+                    <div class="activity-text">Vous avez regardé "Syndrome Coronarien Aigu - SCA"</div>
+                    <div class="activity-time">Aujourd'hui à 14:32</div>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon qcm">✏️</div>
+                <div class="activity-content">
+                    <div class="activity-text">Vous avez complété un examen blanc QCM (Score: 78%)</div>
+                    <div class="activity-time">Hier à 11:45</div>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon ecos">🎯</div>
+                <div class="activity-content">
+                    <div class="activity-text">Vous avez marqué 2 fiches ECOS comme étudiées</div>
+                    <div class="activity-time">Hier à 09:20</div>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon qcm">✏️</div>
+                <div class="activity-content">
+                    <div class="activity-text">Vous avez complété 30 QCM d'entraînement</div>
+                    <div class="activity-time">Il y a 2 jours</div>
+                </div>
+            </div>
+
+            <div class="activity-item">
+                <div class="activity-icon course">📹</div>
+                <div class="activity-content">
+                    <div class="activity-text">Vous avez regardé "Insuffisance cardiaque"</div>
+                    <div class="activity-time">Il y a 3 jours</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="btn-group">
+            <a href="qcm.html" class="btn btn-primary">📊 Continuer les QCM</a>
+            <a href="courses.html" class="btn btn-secondary">📚 Voir les cours</a>
+            <button class="btn btn-secondary" onclick="downloadReport()">📥 Télécharger le rapport</button>
+        </div>
+    </main>
+
+    <script>
+        // Vérifier connexion
+        if (!localStorage.getItem('isLoggedIn')) {
+            window.location.href = 'login.html';
+        }
+
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        if (currentUser.firstName && currentUser.lastName) {
+            const initials = currentUser.firstName.charAt(0) + currentUser.lastName.charAt(0);
+            document.getElementById('userAvatar').textContent = initials.toUpperCase();
+        }
+
+        // Charger les stats
+        const stats = JSON.parse(localStorage.getItem('userStats') || '{"videosWatched": 0, "qcmCompleted": 0, "successRate": 0, "streak": 0}');
+        
+        document.getElementById('videosWatched').textContent = stats.videosWatched || 0;
+        document.getElementById('qcmCompleted').textContent = stats.qcmCompleted || 0;
+        document.getElementById('avgScore').textContent = (stats.successRate || 0) + '%';
+        document.getElementById('streak').textContent = stats.streak || 0;
+
+        // Fiches ECOS étudiées
+        const studied = JSON.parse(localStorage.getItem('studiedEcos') || '[]');
+        document.getElementById('ecosStudied').textContent = studied.length;
+
+        // Progression
+        document.getElementById('coursesPercent').textContent = Math.min(100, Math.round((stats.videosWatched / 15) * 100)) + '%';
+        document.getElementById('coursesFill').style.width = Math.min(100, Math.round((stats.videosWatched / 15) * 100)) + '%';
+
+        document.getElementById('qcmPercent').textContent = Math.min(100, Math.round((stats.qcmCompleted / 50) * 100)) + '%';
+        document.getElementById('qcmFill').style.width = Math.min(100, Math.round((stats.qcmCompleted / 50) * 100)) + '%';
+
+        document.getElementById('ecosPercent').textContent = Math.min(100, Math.round((studied.length / 20) * 100)) + '%';
+        document.getElementById('ecosFill').style.width = Math.min(100, Math.round((studied.length / 20) * 100)) + '%';
+
+        // Graphique des scores
+        const scoresCtx = document.getElementById('scoresChart').getContext('2d');
+        new Chart(scoresCtx, {
+            type: 'line',
+            data: {
+                labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+                datasets: [{
+                    label: 'Taux de réussite (%)',
+                    data: [65, 68, 72, 70, 78, 75, 82],
+                    borderColor: '#2563EB',
+                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#2563EB',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        min: 0,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        },
+                        grid: {
+                            color: '#E5E7EB'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Graphique par spécialité
+        const specialtyCtx = document.getElementById('specialtyChart').getContext('2d');
+        new Chart(specialtyCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Cardiologie', 'Pneumologie', 'Gastro', 'Neurologie'],
+                datasets: [{
+                    data: [85, 72, 65, 58],
+                    backgroundColor: [
+                        '#2563EB',
+                        '#10B981',
+                        '#F59E0B',
+                        '#A855F7'
+                    ],
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Télécharger rapport
+        function downloadReport() {
+            const report = `
+RAPPORT DE PROGRESSION - MedFormation
+${new Date().toLocaleDateString('fr-FR')}
+
+RÉSUMÉ
+- Vidéos visionnées: ${stats.videosWatched}
+- QCM complétés: ${stats.qcmCompleted}
+- Taux de réussite moyen: ${stats.successRate}%
+- Jours consécutifs: ${stats.streak}
+- Fiches ECOS étudiées: ${studied.length}
+
+RECOMMANDATIONS
+1. Continuez votre pratique régulière avec 30-45 min par jour
+2. Renforcez l'interprétation d'ECG (score actuel: 65%)
+3. Commencez les fiches ECOS de communication
+4. Maintenez votre streak en révisant chaque jour
+
+Généré par MedFormation
+            `;
+            const blob = new Blob([report], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'rapport-progression-' + new Date().getTime() + '.txt';
+            a.click();
+        }
+    </script>
+</body>
+</html>
