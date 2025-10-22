@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours - MedFormation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #F9FAFB;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            color: #2563EB;
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #2563EB;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 73px;
+            bottom: 0;
+            width: 260px;
+            background: white;
+            border-right: 1px solid #E5E7EB;
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #6B7280;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: #F9FAFB;
+            color: #2563EB;
+        }
+
+        .nav-item.active {
+            background: #EFF6FF;
+            color: #2563EB;
+            border-right: 3px solid #2563EB;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 32px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #6B7280;
+            font-size: 16px;
+        }
+
+        .filters {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid #E5E7EB;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .filter-group select {
+            padding: 8px 12px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .filter-group input {
+            padding: 8px 12px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 14px;
+            min-width: 200px;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .course-card {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .course-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .course-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            position: relative;
+        }
+
+        .course-thumbnail.free {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        }
+
+        .premium-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #EF4444;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .free-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #10B981;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .course-content {
+            padding: 20px;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .course-meta span {
+            background: #F3F4F6;
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: #6B7280;
+        }
+
+        .course-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .course-description {
+            font-size: 14px;
+            color: #6B7280;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .course-duration {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #6B7280;
+            font-size: 14px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #E5E7EB;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            background: #D1D5DB;
+        }
+
+        .video-player {
+            width: 100%;
+            height: 400px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+            position: relative;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 12px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .video-controls button {
+            background: #2563EB;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .video-controls button:hover {
+            background: #1d4ed8;
+        }
+
+        .course-details {
+            padding: 32px;
+        }
+
+        .course-details h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 16px;
+        }
+
+        .course-details p {
+            font-size: 16px;
+            color: #6B7280;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .course-section {
+            margin-bottom: 32px;
+        }
+
+        .course-section h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 12px;
+        }
+
+        .course-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .course-section li {
+            padding: 12px 0;
+            color: #6B7280;
+            border-bottom: 1px solid #E5E7EB;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .course-section li::before {
+            content: "✓";
+            color: #10B981;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .btn-download {
+            background: #2563EB;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-download:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 64px 32px;
+        }
+
+        .empty-state h2 {
+            font-size: 24px;
+            color: #111827;
+            margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            color: #6B7280;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .modal-content {
+                width: 95%;
+                max-height: 95vh;
+            }
+
+            .video-player {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="dashboard.html" class="logo">🏥 MedFormation</a>
+        <div class="user-avatar" id="userAvatar">SM</div>
+    </header>
+
+    <aside class="sidebar">
+        <a href="dashboard.html" class="nav-item">
+            <span>🏠</span> Dashboard
+        </a>
+        <a href="courses.html" class="nav-item active">
+            <span>📚</span> Cours
+        </a>
+        <a href="qcm.html" class="nav-item">
+            <span>✏️</span> QCM
+        </a>
+        <a href="ecos.html" class="nav-item">
+            <span>🎯</span> ECOS
+        </a>
+        <a href="progress.html" class="nav-item">
+            <span>📊</span> Progression
+        </a>
+        <a href="account.html" class="nav-item">
+            <span>⚙️</span> Mon Compte
+        </a>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>📚 Bibliothèque de cours</h1>
+            <p>Apprenez la cardiologie et d'autres spécialités avec nos cours vidéo de qualité</p>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label for="specialtyFilter">Spécialité :</label>
+                <select id="specialtyFilter">
+                    <option value="">Toutes les spécialités</option>
+                    <option value="Cardiologie">Cardiologie</option>
+                    <option value="Pneumologie">Pneumologie</option>
+                    <option value="Gastro">Gastro-entérologie</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="difficultyFilter">Difficulté :</label>
+                <select id="difficultyFilter">
+                    <option value="">Toutes les difficultés</option>
+                    <option value="Facile">Facile</option>
+                    <option value="Moyen">Moyen</option>
+                    <option value="Difficile">Difficile</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <input type="text" id="searchInput" placeholder="Rechercher un cours...">
+            </div>
+        </div>
+
+        <div class="courses-grid" id="coursesGrid">
+            <!-- Les cours seront insérés ici par JavaScript -->
+        </div>
+    </main>
+
+    <!-- Modal pour afficher le détail du cours -->
+    <div class="modal" id="courseModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeCourseModal()">✕</button>
+            <div class="video-player" id="videoPlayer">
+                ▶️
+                <div class="video-controls">
+                    <button onclick="playVideo()">Play</button>
+                    <button onclick="pauseVideo()">Pause</button>
+                    <button onclick="downloadVideo()">Télécharger</button>
+                </div>
+            </div>
+            <div class="course-details" id="courseDetailsContent">
+                <!-- Le contenu du cours sera inséré ici -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Vérifier la connexion
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        if (!isLoggedIn) {
+            window.location.href = 'login.html';
+        }
+
+        // Récupérer les données utilisateur
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        if (currentUser.firstName && currentUser.lastName) {
+            const initials = currentUser.firstName.charAt(0) + currentUser.lastName.charAt(0);
+            document.getElementById('userAvatar').textContent = initials.toUpperCase();
+        }
+
+        // Base de données des cours
+        const coursesDatabase = [
+            {
+                id: 1,
+                title: "Syndrome Coronarien Aigu (Item 339)",
+                specialty: "Cardiologie",
+                topic: "Cardiologie",
+                difficulty: "Moyen",
+                duration: 1260,
+                thumbnail: "❤️",
+                is_free: true,
+                description: "Cours complet sur le syndrome coronarien aigu : physiopathologie, diagnostic, traitement d'urgence",
+                fullContent: `
+                    <h2>Syndrome Coronarien Aigu (Item 339) - Cardiologie</h2>
+                    
+                    <div class="course-section">
+                        <h3>1. Bases physiopathologiques</h3>
+                        <ul>
+                            <li>Le SCA est une manifestation aiguë de la maladie athéromateuse coronarienne</li>
+                            <li>Rupture d'une plaque d'athérome → thrombose intraluminal</li>
+                            <li>Occlusion ± complète du vaisseau → ischémie myocardique → nécrose</li>
+                            <li>Plaques vulnérables : cœur lipidique important, chape fibreuse fine</li>
+                            <li>Facteurs de vulnérabilité : hypercholestérolémie, tabac, hyperfibrinémie</li>
+                        </ul>
+                    </div>
+
+                    <div class="course-section">
+                        <h3>2. Définitions essentielles</h3>
+                        <ul>
+                            <li><strong>Infarctus du myocarde (IM) :</strong> Nécrose de cardiomyocytes en contexte d'ischémie aiguë</li>
+                            <li><strong>Diagnostic d'IM :</strong> Troponine élevée + critères d'ischémie (symptômes, ECG, imagerie)</li>
+                            <li><strong>SCA ST+ (STEMI) :</strong> Sus-décalage persistant du segment ST</li>
+                            <li><strong>SCA ST- (NSTE-ACS) :</strong> Absence de sus-décalage persistant du ST</li>
+                            <li><strong>Types d'IM :</strong> Type 1 (athérothrombotique), Type 2 (déséquilibre apport/besoins)</li>
+                        </ul>
+                    </div>
+
+                    <div class="course-section">
+                        <h3>3. Clinique</h3>
+                        <ul>
+                            <li><strong>Douleur angineuse typique :</strong> Rétrosternale, constrictive, irradiant bras gauche/cou</li>
+                            <li><strong>Présentations atypiques :</strong> Plus fréquentes chez les âgés, femmes, diabétiques</li>
+                            <li><strong>Équivalents angineux :</strong> Dyspnée, asthénie, malaise</li>
+                            <li><strong>Facteurs déclenchants :</strong> Effort, stress, froid, effort violent</li>
+                            <li><strong>Examen physique :</strong> Souvent normal en l'absence de complication</li>
+                        </ul>
+                    </div>
+
+                    <div class="course-section">
+                        <h3>4. Diagnostic paraclinique</h3>
+                        <ul>
+                            <li><strong>ECG 12 dérivations :</strong> Examen de première intention à réaliser < 10 min</li>
+                            <li><strong>SCA ST+ :</strong> Sus-décalage ≥ 1-2 mm pendant ≥ 2 dérivations contiguës</li>
+                            <li><strong>SCA ST- :</strong> Sous-décalage, sus-décalage transitoire, ou ECG normal possible</li>
+                            <li><strong>Troponine ultrasensible :</strong> Marqueur clé pour confirmé l'IM (dosage initial + H1 ou H2)</li>
+                            <li><strong>Autres biomarqueurs :</strong> Myoglobine, CK-MB, BNP/NT-proBNP</li>
+                        </ul>
+                    </div>
+
+                    <div class="course-section">
+                        <h3>5. Prise en charge initiale</h3>
+                        <ul>
+                            <li><strong>Appel au 15 :</strong> Le geste le plus salvateur (FMC-to-balloon < 120 min)</li>
+                            <li><strong>SCA ST+ :</strong> Angioplastie primaire (préféré à fibrinolyse si délai respecté)</li>
+                            <li><strong>SCA ST- :</strong> Coronarographie selon le risque (immédiate si très haut risque)</li>
+                            <li><strong>Traitement médical initial :</strong> Aspirine IVD + HNF + oxygène + morphine si besoin</li>
+                            <li><strong>Anticoagulation :</strong> HNF ou HBPM selon délai jusqu'à revascularisation</li>
+                        </ul>
+                    </div>
+
+                    <div class="course-section">
+                        <h3>6. Complications précoces</h3>
+                        <ul>
+                            <li><strong>Troubles du rythme :</strong> ESV, TV, FV (cause majeure de décès précoce)</li>
+                            <li><strong>Troubles de conduction :</strong> BAV nodal (inférieur, réversible) vs infranodal (antérieur, grave)</li>
+                            <li><strong>Insuffisance cardiaque aiguë :</strong> OAP, choc cardiogénique (classification de Killip)</li>
+                            <li><strong>Complications mécaniques :</strong> Rupture de pilier mitral, CIV, rupture de paroi libre</li>
+                            <li><strong>Infarctus du VD :</strong> Extension de l'infarctus inférieur (hypotension + turgescence jugulaire)</li>
+                        </ul>
+                    </div>
+
+                    <div class="course-section">
+                        <h3>7. Prise en charge au long cours</h3>
+                        <ul>
+                            <li><strong>Aspirine à vie</strong> + P2Y12 inhibiteur 12 mois</li>
+                            <li><strong>Statines forte dose :</strong> Objectif LDL < 0,55 g/L</li>
+                            <li><strong>IEC/ARA2 :</strong> Si FEVG ≤ 40 %, diabète, IRC</li>
+                            <li><strong>Bêtabloquants :</strong> Si FEVG ≤ 40 %</li>
+                            <li><strong>Contrôle des FDR :</strong> Sevrage tabagique, régime méditerranéen, activité physique</li>
+                            <li><strong>Suivi :</strong> Réadaptation cardiaque, surveillance FEVG, prévention secondaire</li>
+                        </ul>
+                    </div>
+
+                    <div class="course-section">
+                        <h3>📊 Points clés à retenir</h3>
+                        <ul>
+                            <li>Appel au 15 immédiatement = geste salvateur n°1</li>
+                            <li>ECG rapidement (< 10 min) = diagnostic initial</li>
+                            <li>SCA ST+ = urgence coronarienne < 120 min</li>
+                            <li>Troponine + ECG = diagnostic d'IM confirmé</li>
+                            <li>Revascularisation précoce = réduction de la mortalité</li>
+                            <li>Traitement médical de fond = prévention secondaire essentielle</li>
+                        </ul>
+                    </div>
+
+                    <button class="btn-download" onclick="downloadCoursePDF()">📥 Télécharger la fiche PDF</button>
+                `
+            },
+            {
+                id: 2,
+                title: "Insuffisance cardiaque",
+                specialty: "Cardiologie",
+                topic: "Cardiologie",
+                difficulty: "Moyen",
+                duration: 900,
+                thumbnail: "💔",
+                is_free: false,
+                description: "Physiopathologie, diagnostic et traitement de l'insuffisance cardiaque",
+                fullContent: `<h2>Insuffisance cardiaque</h2><p>Contenu à remplir - Vidéo premium</p>`
+            },
+            {
+                id: 3,
+                title: "Fibrillation atriale",
+                specialty: "Cardiologie",
+                topic: "Arythmies",
+                difficulty: "Moyen",
+                duration: 780,
+                thumbnail: "⚡",
+                is_free: false,
+                description: "Diagnostic et prise en charge de la fibrillation atriale",
+                fullContent: `<h2>Fibrillation atriale</h2><p>Contenu à remplir - Vidéo premium</p>`
+            },
+            {
+                id: 4,
+                title: "Hypertension artérielle",
+                specialty: "Cardiologie",
+                topic: "Hypertension",
+                difficulty: "Facile",
+                duration: 640,
+                thumbnail: "📈",
+                is_free: true,
+                description: "Diagnostic et suivi de l'hypertension artérielle",
+                fullContent: `<h2>Hypertension artérielle</h2><p>Contenu à remplir - Vidéo gratuite</p>`
+            },
+            {
+                id: 5,
+                title: "Dyslipidémie et athérosclérose",
+                specialty: "Cardiologie",
+                topic: "Métabolisme",
+                difficulty: "Difficile",
+                duration: 1020,
+                thumbnail: "🧬",
+                is_free: false,
+                description: "Physiopathologie de l'athérosclérose et gestion des dyslipidémies",
+                fullContent: `<h2>Dyslipidémie et athérosclérose</h2><p>Contenu à remplir - Vidéo premium</p>`
+            },
+            {
+                id: 6,
+                title: "Prise en charge de l'asthme",
+                specialty: "Pneumologie",
+                topic: "Asthme",
+                difficulty: "Moyen",
+                duration: 850,
+                thumbnail: "🫁",
+                is_free: true,
+                description: "Diagnostic et traitement de l'asthme selon les guidelines",
+                fullContent: `<h2>Prise en charge de l'asthme</h2><p>Contenu à remplir - Vidéo gratuite</p>`
+            }
+        ];
+
+        // Fonction pour afficher les cours
+        function displayCourses(courses = coursesDatabase) {
+            const coursesGrid = document.getElementById('coursesGrid');
+            coursesGrid.innerHTML = '';
+
+            if (courses.length === 0) {
+                coursesGrid.innerHTML = `
+                    <div style="grid-column: 1/-1;">
+                        <div class="empty-state">
+                            <h2>Aucun cours trouvé</h2>
+                            <p>Essayez de modifier vos filtres de recherche</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            courses.forEach(course => {
+                const isAccessible = course.is_free || currentUser.subscription_status === 'active';
+                const lockIcon = !isAccessible ? '🔒' : '';
+                const badgeClass = course.is_free ? 'free-badge' : 'premium-badge';
+                const badgeText = course.is_free ? '📖 Gratuit' : '⭐ Premium';
+
+                const courseCard = document.createElement('div');
+                courseCard.className = 'course-card';
+                courseCard.onclick = () => isAccessible ? openCourseModal(course) : showUpgradeMessage();
+                courseCard.innerHTML = `
+                    <div class="course-thumbnail ${course.is_free ? 'free' : ''}">
+                        ${course.thumbnail}
+                        <span class="${badgeClass}">${badgeText}</span>
+                        ${lockIcon}
+                    </div>
+                    <div class="course-content">
+                        <div class="course-meta">
+                            <span>${course.specialty}</span>
+                            <span>${course.difficulty}</span>
+                        </div>
+                        <div class="course-title">${course.title} ${lockIcon}</div>
+                        <div class="course-description">${course.description}</div>
+                        <div class="course-duration">
+                            📹 ${Math.floor(course.duration / 60)} min
+                        </div>
+                    </div>
+                `;
+                coursesGrid.appendChild(courseCard);
+            });
+        }
+
+        // Fonction pour ouvrir le modal du cours
+        function openCourseModal(course) {
+            const modal = document.getElementById('courseModal');
+            const courseDetailsContent = document.getElementById('courseDetailsContent');
+            
+            // Mettre à jour le contenu
+            courseDetailsContent.innerHTML = course.fullContent;
+            
+            // Afficher le modal
+            modal.classList.add('active');
+            
+            // Sauvegarder la progression
+            let stats = JSON.parse(localStorage.getItem('userStats') || '{"videosWatched": 0, "qcmCompleted": 0, "successRate": 0, "streak": 0}');
+            stats.videosWatched = (stats.videosWatched || 0) + 1;
+            localStorage.setItem('userStats', JSON.stringify(stats));
+        }
+
+        // Fonction pour fermer le modal
+        function closeCourseModal() {
+            const modal = document.getElementById('courseModal');
+            modal.classList.remove('active');
+        }
+
+        // Fonction pour afficher message upgrade
+        function showUpgradeMessage() {
+            alert('Ce contenu est réservé aux utilisateurs premium. Accédez au pricing pour vous abonner.');
+        }
+
+        // Fonctions vidéo (simulation)
+        function playVideo() {
+            alert('▶️ Lecture vidéo (simulation)');
+        }
+
+        function pauseVideo() {
+            alert('⏸️ Vidéo mise en pause (simulation)');
+        }
+
+        function downloadVideo() {
+            alert('📥 Téléchargement de la fiche PDF (simulation)');
+        }
+
+        function downloadCoursePDF() {
+            alert('📥 Téléchargement du PDF (simulation) - En production, cela génère un vrai PDF');
+        }
+
+        // Fermer modal au clic en dehors
+        document.getElementById('courseModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCourseModal();
+            }
+        });
+
+        // Filtres et recherche
+        document.getElementById('specialtyFilter').addEventListener('change', applyFilters);
+        document.getElementById('difficultyFilter').addEventListener('change', applyFilters);
+        document.getElementById('searchInput').addEventListener('keyup', applyFilters);
+
+        function applyFilters() {
+            const specialty = document.getElementById('specialtyFilter').value;
+            const difficulty = document.getElementById('difficultyFilter').value;
+            const search = document.getElementById('searchInput').value.toLowerCase();
+
+            const filtered = coursesDatabase.filter(course => {
+                const matchSpecialty = !specialty || course.specialty === specialty;
+                const matchDifficulty = !difficulty || course.difficulty === difficulty;
+                const matchSearch = !search || 
+                    course.title.toLowerCase().includes(search) || 
+                    course.description.toLowerCase().includes(search);
+                
+                return matchSpecialty && matchDifficulty && matchSearch;
+            });
+
+            displayCourses(filtered);
+        }
+
+        // Affichage initial
+        displayCourses();
+    </script>
+</body>
+</html>
