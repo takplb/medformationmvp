@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedFormation - Formation médicale EDN</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Landing Page -->
+    <div id="landing-page" class="page">
+        <header class="header">
+            <div class="container">
+                <div class="nav-brand">
+                    <h2>MedFormation</h2>
+                </div>
+                <nav class="nav-menu">
+                    <button class="btn btn--outline" onclick="showPage('login')">Se connecter</button>
+                    <button class="btn btn--primary" onclick="showPage('signup')">S'inscrire</button>
+                </nav>
+            </div>
+        </header>
+
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Réussissez vos EDN avec la formation médicale de référence</h1>
+                    <p>Cours vidéo, QCM interactifs et fiches ECOS pour tous les étudiants en médecine</p>
+                    <div class="hero-cta">
+                        <button class="btn btn--primary btn--lg" onclick="showPage('signup')">Commencer gratuitement</button>
+                        <button class="btn btn--outline btn--lg" onclick="showPage('pricing')">Voir les tarifs</button>
+                    </div>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">Vidéos de cours</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">1000+</span>
+                        <span class="stat-label">QCM interactifs</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">100+</span>
+                        <span class="stat-label">Fiches ECOS</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <h2>Tout ce dont vous avez besoin pour réussir</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">📹</div>
+                        <h3>Cours vidéo HD</h3>
+                        <p>Cours complets par spécialité avec support PDF téléchargeable</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">❓</div>
+                        <h3>QCM interactifs</h3>
+                        <p>Questions avec explications détaillées et références bibliographiques</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📋</div>
+                        <h3>Fiches ECOS</h3>
+                        <p>Grilles d'évaluation et conseils pour tous les gestes techniques</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Suivi des progrès</h3>
+                        <p>Statistiques détaillées et identification des points faibles</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="pricing-preview">
+            <div class="container">
+                <h2>Choisissez votre formule</h2>
+                <div class="pricing-cards">
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3>Gratuit</h3>
+                            <div class="price">0€<span>/mois</span></div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li>3 vidéos de cours</li>
+                            <li>20 QCM d'entraînement</li>
+                            <li>5 fiches ECOS</li>
+                        </ul>
+                        <button class="btn btn--outline btn--full-width" onclick="showPage('signup')">Commencer</button>
+                    </div>
+                    <div class="pricing-card pricing-card--featured">
+                        <div class="pricing-badge">Populaire</div>
+                        <div class="pricing-header">
+                            <h3>Mensuel</h3>
+                            <div class="price">29€<span>/mois</span></div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li>Accès illimité aux cours</li>
+                            <li>500+ QCM avec explications</li>
+                            <li>100+ fiches ECOS</li>
+                            <li>Examens blancs</li>
+                            <li>Suivi de progression</li>
+                        </ul>
+                        <button class="btn btn--primary btn--full-width" onclick="showPage('signup')">Essayer 7 jours</button>
+                    </div>
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <h3>Annuel</h3>
+                            <div class="price">199€<span>/an</span></div>
+                            <div class="price-savings">Économisez 31%</div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li>Tous les avantages du plan mensuel</li>
+                            <li>16.58€/mois équivalent</li>
+                            <li>Accès prioritaire aux nouveautés</li>
+                            <li>Support prioritaire</li>
+                        </ul>
+                        <button class="btn btn--primary btn--full-width" onclick="showPage('signup')">Choisir annuel</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Sign Up Page -->
+    <div id="signup-page" class="page" style="display: none;">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h2>Créer un compte</h2>
+                    <p>Rejoignez des milliers d'étudiants qui réussissent leurs EDN</p>
+                </div>
+                <form id="signup-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Prénom</label>
+                            <input type="text" class="form-control" name="first_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nom</label>
+                            <input type="text" class="form-control" name="last_name" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" name="password" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Promotion</label>
+                            <select class="form-control" name="promotion" required>
+                                <option value="">Choisir...</option>
+                                <option value="DFASM1">DFASM1</option>
+                                <option value="DFASM2">DFASM2</option>
+                                <option value="DFASM3">DFASM3</option>
+                                <option value="Interne">Interne</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Faculté</label>
+                            <select class="form-control" name="medical_school" required>
+                                <option value="">Choisir...</option>
+                                <option value="Université Paris Cité">Université Paris Cité</option>
+                                <option value="Université Lyon 1">Université Lyon 1</option>
+                                <option value="Université Aix-Marseille">Université Aix-Marseille</option>
+                                <option value="Université Toulouse">Université Toulouse</option>
+                                <option value="Autre">Autre</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full-width">Créer mon compte</button>
+                </form>
+                <div class="auth-footer">
+                    <p>Déjà inscrit ? <a href="#" onclick="showPage('login')">Se connecter</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Page -->
+    <div id="login-page" class="page" style="display: none;">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-header">
+                    <h2>Se connecter</h2>
+                    <p>Accédez à votre espace d'apprentissage</p>
+                </div>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" required value="student@med.fr">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Mot de passe</label>
+                        <input type="password" class="form-control" name="password" required value="demo123">
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full-width">Se connecter</button>
+                </form>
+                <div class="auth-footer">
+                    <a href="#" onclick="showPage('forgot-password')">Mot de passe oublié ?</a>
+                    <p>Pas encore inscrit ? <a href="#" onclick="showPage('signup')">Créer un compte</a></p>
+                </div>
+                <div class="demo-accounts">
+                    <h4>Comptes de démonstration :</h4>
+                    <div class="demo-account">
+                        <strong>Étudiant gratuit:</strong> student@med.fr / demo123
+                    </div>
+                    <div class="demo-account">
+                        <strong>Étudiant premium:</strong> premium@med.fr / demo123
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboard-page" class="page app-layout" style="display: none;">
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo" onclick="showPage('dashboard')">MedFormation</div>
+                    <div class="search-bar">
+                        <input type="text" placeholder="Rechercher un cours, QCM..." class="search-input">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="notifications">
+                        <span class="notification-badge">3</span>
+                        🔔
+                    </div>
+                    <div class="user-menu" onclick="toggleUserMenu()">
+                        <span id="user-name">Sophie M.</span>
+                        <span class="dropdown-arrow">▼</span>
+                        <div class="user-dropdown" id="user-dropdown">
+                            <a href="#" onclick="showPage('account')">Mon compte</a>
+                            <a href="#" onclick="logout()">Déconnexion</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="app-content">
+            <aside class="sidebar">
+                <nav class="sidebar-nav">
+                    <a href="#" class="nav-item active" onclick="showPage('dashboard')">
+                        <span class="nav-icon">🏠</span>
+                        <span class="nav-text">Dashboard</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('courses')">
+                        <span class="nav-icon">📹</span>
+                        <span class="nav-text">Cours</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('qcm')">
+                        <span class="nav-icon">❓</span>
+                        <span class="nav-text">QCM</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('ecos')">
+                        <span class="nav-icon">📋</span>
+                        <span class="nav-text">ECOS</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('progress')">
+                        <span class="nav-icon">📊</span>
+                        <span class="nav-text">Progression</span>
+                    </a>
+                    <a href="#" class="nav-item" onclick="showPage('account')">
+                        <span class="nav-icon">⚙️</span>
+                        <span class="nav-text">Mon Compte</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <main class="main-content">
+                <div id="dashboard-content">
+                    <div class="dashboard-header">
+                        <h1>Bonjour <span id="welcome-name">Sophie</span> ! 👋</h1>
+                        <p>Continuez votre apprentissage là où vous vous êtes arrêté</p>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">📹</div>
+                            <div class="stat-content">
+                                <div class="stat-number" id="videos-watched">12</div>
+                                <div class="stat-label">Vidéos vues</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-content">
+                                <div class="stat-number" id="qcm-completed">45</div>
+                                <div class="stat-label">QCM réalisés</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🎯</div>
+                            <div class="stat-content">
+                                <div class="stat-number" id="success-rate">78%</div>
+                                <div class="stat-label">Taux de réussite</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🔥</div>
+                            <div class="stat-content">
+                                <div class="stat-number" id="streak">7</div>
+                                <div class="stat-label">Jours consécutifs</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-sections">
+                        <section class="recent-activity">
+                            <h2>Continuer l'apprentissage</h2>
+                            <div class="activity-cards">
+                                <div class="activity-card">
+                                    <div class="activity-thumbnail">📹</div>
+                                    <div class="activity-content">
+                                        <h3>Introduction à l'ECG</h3>
+                                        <p>Cardiologie • 13 min</p>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 65%"></div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn--primary btn--sm" onclick="showPage('course-detail', 0)">Continuer</button>
+                                </div>
+                                <div class="activity-card">
+                                    <div class="activity-thumbnail">❓</div>
+                                    <div class="activity-content">
+                                        <h3>QCM Cardiologie</h3>
+                                        <p>15 questions restantes</p>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 40%"></div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn--primary btn--sm" onclick="showPage('qcm-training')">Reprendre</button>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section class="quick-access">
+                            <h2>Accès rapide</h2>
+                            <div class="quick-access-grid">
+                                <div class="quick-card" onclick="showPage('courses')">
+                                    <div class="quick-icon">📹</div>
+                                    <h3>Cours vidéo</h3>
+                                    <p>Accédez à la bibliothèque complète</p>
+                                </div>
+                                <div class="quick-card" onclick="showPage('qcm')">
+                                    <div class="quick-icon">❓</div>
+                                    <h3>QCM</h3>
+                                    <p>Testez vos connaissances</p>
+                                </div>
+                                <div class="quick-card" onclick="showPage('ecos')">
+                                    <div class="quick-icon">📋</div>
+                                    <h3>Fiches ECOS</h3>
+                                    <p>Préparez vos examens pratiques</p>
+                                </div>
+                                <div class="quick-card" onclick="showPage('progress')">
+                                    <div class="quick-icon">📊</div>
+                                    <h3>Mes progrès</h3>
+                                    <p>Suivez votre évolution</p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="upgrade-banner" id="upgrade-banner">
+                        <div class="banner-content">
+                            <div class="banner-text">
+                                <h3>🚀 Passez à Premium</h3>
+                                <p>Accès illimité à tous les cours et QCM</p>
+                            </div>
+                            <button class="btn btn--primary" onclick="showPage('pricing')">Découvrir Premium</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Other page placeholders -->
+    <div id="courses-page" class="page app-layout" style="display: none;"></div>
+    <div id="course-detail-page" class="page app-layout" style="display: none;"></div>
+    <div id="qcm-page" class="page app-layout" style="display: none;"></div>
+    <div id="qcm-training-page" class="page app-layout" style="display: none;"></div>
+    <div id="qcm-exam-page" class="page app-layout" style="display: none;"></div>
+    <div id="qcm-results-page" class="page app-layout" style="display: none;"></div>
+    <div id="ecos-page" class="page app-layout" style="display: none;"></div>
+    <div id="ecos-detail-page" class="page app-layout" style="display: none;"></div>
+    <div id="progress-page" class="page app-layout" style="display: none;"></div>
+    <div id="account-page" class="page app-layout" style="display: none;"></div>
+    <div id="pricing-page" class="page" style="display: none;"></div>
+    <div id="checkout-page" class="page" style="display: none;"></div>
+    <div id="forgot-password-page" class="page" style="display: none;"></div>
+
+    <!-- Toast notifications -->
+    <div id="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
