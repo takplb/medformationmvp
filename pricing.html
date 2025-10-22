@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarifs - MedFormation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #F9FAFB;
+            color: #374151;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            color: #2563EB;
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-header {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-login {
+            background: transparent;
+            color: #2563EB;
+            border: 2px solid #2563EB;
+        }
+
+        .btn-login:hover {
+            background: #EFF6FF;
+        }
+
+        .btn-signup {
+            background: #2563EB;
+            color: white;
+        }
+
+        .btn-signup:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .header-section h1 {
+            font-size: 48px;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 20px;
+        }
+
+        .header-section p {
+            font-size: 20px;
+            color: #6B7280;
+            margin-bottom: 32px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 80px;
+        }
+
+        .pricing-card {
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 20px;
+            padding: 40px 32px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .pricing-card.featured {
+            border-color: #2563EB;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
+            transform: scale(1.05);
+        }
+
+        .pricing-card.featured:hover {
+            transform: scale(1.05) translateY(-8px);
+        }
+
+        .badge {
+            display: inline-block;
+            background: #2563EB;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .pricing-card.featured .badge {
+            background: linear-gradient(135deg, #2563EB 0%, #1d4ed8 100%);
+        }
+
+        .plan-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 16px;
+        }
+
+        .price {
+            font-size: 48px;
+            font-weight: 800;
+            color: #2563EB;
+            margin-bottom: 8px;
+        }
+
+        .price-period {
+            font-size: 14px;
+            color: #6B7280;
+            margin-bottom: 32px;
+        }
+
+        .savings {
+            background: #ECFDF5;
+            color: #065F46;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .features {
+            list-style: none;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .features li {
+            padding: 12px 0;
+            color: #6B7280;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .features li:last-child {
+            border-bottom: none;
+        }
+
+        .features li::before {
+            content: "✓";
+            color: #10B981;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .btn-subscribe {
+            width: 100%;
+            padding: 14px 24px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .btn-subscribe.primary {
+            background: #2563EB;
+            color: white;
+        }
+
+        .btn-subscribe.primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-subscribe.secondary {
+            background: transparent;
+            color: #2563EB;
+            border: 2px solid #2563EB;
+        }
+
+        .btn-subscribe.secondary:hover {
+            background: #EFF6FF;
+        }
+
+        .faq-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+
+        .faq-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .faq-items {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #E5E7EB;
+            padding: 20px 0;
+            cursor: pointer;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            font-size: 16px;
+            font-weight: 600;
+            color: #111827;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-toggle {
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+
+        .faq-item.open .faq-toggle {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            display: none;
+            margin-top: 16px;
+            color: #6B7280;
+            line-height: 1.6;
+        }
+
+        .faq-item.open .faq-answer {
+            display: block;
+        }
+
+        .comparison-table {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            overflow-x: auto;
+        }
+
+        .comparison-table h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #F9FAFB;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #111827;
+            border-bottom: 2px solid #E5E7EB;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #E5E7EB;
+            color: #6B7280;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .feature-included {
+            color: #10B981;
+            font-weight: 600;
+        }
+
+        .feature-excluded {
+            color: #9CA3AF;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 16px;
+            }
+
+            .header-section h1 {
+                font-size: 32px;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .pricing-card.featured:hover {
+                transform: translateY(-8px);
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-table {
+                padding: 20px;
+                overflow-x: auto;
+            }
+
+            table {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="index.html" class="logo">🏥 MedFormation</a>
+        <div class="header-right">
+            <a href="login.html" class="btn-header btn-login">Se connecter</a>
+            <a href="signup.html" class="btn-header btn-signup">S'inscrire</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="header-section">
+            <h1>Tarifs transparents et accessibles</h1>
+            <p>Choisissez le plan qui correspond à votre parcours d'études</p>
+        </div>
+
+        <!-- Grille de tarification -->
+        <div class="pricing-grid">
+            <!-- Plan Gratuit -->
+            <div class="pricing-card">
+                <div class="badge">📖 GRATUIT</div>
+                <div class="plan-name">Gratuit</div>
+                <div class="price">0€</div>
+                <div class="price-period">pour toujours</div>
+
+                <ul class="features">
+                    <li>3 vidéos de cours</li>
+                    <li>20 QCM d'entraînement</li>
+                    <li>5 fiches ECOS</li>
+                    <li>Accès basique au dashboard</li>
+                </ul>
+
+                <button class="btn-subscribe secondary" onclick="window.location.href='signup.html'">
+                    Commencer gratuitement
+                </button>
+            </div>
+
+            <!-- Plan Mensuel -->
+            <div class="pricing-card featured">
+                <div class="badge">⭐ POPULAIRE</div>
+                <div class="plan-name">Mensuel</div>
+                <div class="price">29€</div>
+                <div class="price-period">par mois, sans engagement</div>
+
+                <ul class="features">
+                    <li>✅ Accès illimité aux cours</li>
+                    <li>✅ 500+ QCM avec corrections</li>
+                    <li>✅ 100+ fiches ECOS</li>
+                    <li>✅ Examens blancs</li>
+                    <li>✅ Suivi de progression</li>
+                    <li>✅ Algorithme de révision</li>
+                    <li>✅ Support prioritaire</li>
+                </ul>
+
+                <button class="btn-subscribe primary" onclick="goToCheckout('monthly')">
+                    S'abonner maintenant
+                </button>
+            </div>
+
+            <!-- Plan Annuel -->
+            <div class="pricing-card">
+                <div class="badge">💎 MEILLEURE OFFRE</div>
+                <div class="plan-name">Annuel</div>
+                <div class="price">199€</div>
+                <div class="price-period">par an</div>
+                <div class="savings">Économisez 149€ (31% de réduction)</div>
+
+                <ul class="features">
+                    <li>✅ Tous les avantages du plan Mensuel</li>
+                    <li>✅ Soit 16,58€ par mois</li>
+                    <li>✅ Nouvelles spécialités en avant-première</li>
+                    <li>✅ Support VIP 24/7</li>
+                    <li>✅ Certificats de progression</li>
+                </ul>
+
+                <button class="btn-subscribe primary" onclick="goToCheckout('yearly')">
+                    S'abonner à l'année
+                </button>
+            </div>
+        </div>
+
+        <!-- Tableau de comparaison -->
+        <div class="comparison-table">
+            <h2>Comparaison détaillée</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fonctionnalité</th>
+                        <th>Gratuit</th>
+                        <th>Mensuel</th>
+                        <th>Annuel</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Vidéos de cours</td>
+                        <td class="feature-excluded">3</td>
+                        <td class="feature-included">Illimité</td>
+                        <td class="feature-included">Illimité</td>
+                    </tr>
+                    <tr>
+                        <td>Questions QCM</td>
+                        <td class="feature-excluded">20</td>
+                        <td class="feature-included">500+</td>
+                        <td class="feature-included">500+</td>
+                    </tr>
+                    <tr>
+                        <td>Fiches ECOS</td>
+                        <td class="feature-excluded">5</td>
+                        <td class="feature-included">100+</td>
+                        <td class="feature-included">100+</td>
+                    </tr>
+                    <tr>
+                        <td>Examens blancs</td>
+                        <td class="feature-excluded">❌</td>
+                        <td class="feature-included">✅</td>
+                        <td class="feature-included">✅</td>
+                    </tr>
+                    <tr>
+                        <td>Suivi de progression</td>
+                        <td class="feature-excluded">Limité</td>
+                        <td class="feature-included">Complet</td>
+                        <td class="feature-included">Complet</td>
+                    </tr>
+                    <tr>
+                        <td>Algorithme de répétition espacée</td>
+                        <td class="feature-excluded">❌</td>
+                        <td class="feature-included">✅</td>
+                        <td class="feature-included">✅</td>
+                    </tr>
+                    <tr>
+                        <td>Support</td>
+                        <td class="feature-excluded">Communauté</td>
+                        <td class="feature-included">Standard</td>
+                        <td class="feature-included">VIP 24/7</td>
+                    </tr>
+                    <tr>
+                        <td>Certificats</td>
+                        <td class="feature-excluded">❌</td>
+                        <td class="feature-excluded">❌</td>
+                        <td class="feature-included">✅</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- FAQ -->
+        <div class="faq-section">
+            <h2 class="faq-title">Questions fréquemment posées</h2>
+            <div class="faq-items">
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <span>Puis-je changer de plan à tout moment ?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Oui, vous pouvez mettre à niveau ou rétrograder votre plan à tout moment. Les modifications prennent effet immédiatement et les ajustements de facturation sont appliqués automatiquement.
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <span>Y a-t-il une période d'essai gratuit ?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Oui, le plan gratuit vous permet d'explorer la plateforme sans limitations de temps. Commencez avec 3 vidéos, 20 QCM et 5 fiches ECOS pour essayer avant de vous abonner.
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <span>Comment puis-je annuler mon abonnement ?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Vous pouvez annuler votre abonnement à tout moment depuis votre page de compte, sans pénalité. L'accès restera actif jusqu'à la fin de votre période de facturation actuelle.
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <span>Acceptez-vous d'autres moyens de paiement ?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Nous acceptons toutes les cartes de crédit majeures (Visa, Mastercard, American Express) via Stripe. D'autres moyens de paiement seront ajoutés bientôt.
+                    </div>
+                </div>
+
+                <div class="faq-item" onclick="toggleFAQ(this)">
+                    <div class="faq-question">
+                        <span>Y a-t-il une réduction pour les groupes ?</span>
+                        <span class="faq-toggle">▼</span>
+                    </div>
+                    <div class="faq-answer">
+                        Oui ! Nous proposons des tarifs réduits pour les groupes de 10+ étudiants ou pour les établissements d'enseignement. Contactez notre équipe pour plus d'informations.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goToCheckout(plan) {
+            window.location.href = 'checkout.html?plan=' + plan;
+        }
+
+        function toggleFAQ(element) {
+            element.classList.toggle('open');
+        }
+    </script>
+</body>
+</html>
