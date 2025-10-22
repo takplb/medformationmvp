@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Compte - MedFormation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #F9FAFB;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            color: #2563EB;
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #2563EB;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 73px;
+            bottom: 0;
+            width: 260px;
+            background: white;
+            border-right: 1px solid #E5E7EB;
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #6B7280;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: #F9FAFB;
+            color: #2563EB;
+        }
+
+        .nav-item.active {
+            background: #EFF6FF;
+            color: #2563EB;
+            border-right: 3px solid #2563EB;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 32px;
+            max-width: 900px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #6B7280;
+            font-size: 16px;
+        }
+
+        .tab-navigation {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            border-bottom: 2px solid #E5E7EB;
+        }
+
+        .tab-button {
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: #6B7280;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab-button.active {
+            color: #2563EB;
+            border-bottom-color: #2563EB;
+        }
+
+        .tab-button:hover {
+            color: #2563EB;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section styles */
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #E5E7EB;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #E5E7EB;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: #F9FAFB;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2563EB;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .subscription-card {
+            background: linear-gradient(135deg, #2563EB 0%, #1d4ed8 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+        }
+
+        .subscription-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .subscription-status {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 16px;
+        }
+
+        .subscription-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .subscription-detail {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .subscription-detail-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .subscription-detail-value {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .billing-history {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .billing-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .billing-table th {
+            background: #F9FAFB;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+            border-bottom: 2px solid #E5E7EB;
+        }
+
+        .billing-table td {
+            padding: 16px;
+            border-bottom: 1px solid #E5E7EB;
+            font-size: 14px;
+            color: #6B7280;
+        }
+
+        .billing-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .billing-status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-paid {
+            background: #ECFDF5;
+            color: #065F46;
+        }
+
+        .status-pending {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #2563EB;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            background: #E5E7EB;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #D1D5DB;
+        }
+
+        .btn-danger {
+            background: #EF4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #DC2626;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .danger-zone {
+            border: 2px solid #EF4444;
+            border-radius: 10px;
+            padding: 20px;
+            background: #FEF2F2;
+        }
+
+        .danger-zone h3 {
+            color: #991B1B;
+            margin-bottom: 12px;
+        }
+
+        .danger-zone p {
+            color: #7F1D1D;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .preference-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .preference-item:last-child {
+            border-bottom: none;
+        }
+
+        .preference-label {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preference-title {
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+
+        .preference-description {
+            font-size: 13px;
+            color: #6B7280;
+        }
+
+        .toggle {
+            width: 50px;
+            height: 28px;
+            background: #E5E7EB;
+            border-radius: 14px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .toggle.active {
+            background: #10B981;
+        }
+
+        .toggle-dot {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .toggle.active .toggle-dot {
+            left: 24px;
+        }
+
+        .success-message {
+            background: #ECFDF5;
+            border: 1px solid #A7F3D0;
+            color: #065F46;
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .subscription-details {
+                grid-template-columns: 1fr;
+            }
+
+            .tab-navigation {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="dashboard.html" class="logo">🏥 MedFormation</a>
+        <div class="user-avatar" id="userAvatar">SM</div>
+    </header>
+
+    <aside class="sidebar">
+        <a href="dashboard.html" class="nav-item">
+            <span>🏠</span> Dashboard
+        </a>
+        <a href="courses.html" class="nav-item">
+            <span>📚</span> Cours
+        </a>
+        <a href="qcm.html" class="nav-item">
+            <span>✏️</span> QCM
+        </a>
+        <a href="ecos.html" class="nav-item">
+            <span>🎯</span> ECOS
+        </a>
+        <a href="progress.html" class="nav-item">
+            <span>📊</span> Progression
+        </a>
+        <a href="account.html" class="nav-item active">
+            <span>⚙️</span> Mon Compte
+        </a>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>⚙️ Mon Compte</h1>
+            <p>Gérez votre profil, votre abonnement et vos préférences</p>
+        </div>
+
+        <div class="tab-navigation">
+            <button class="tab-button active" onclick="switchTab('profile')">👤 Profil</button>
+            <button class="tab-button" onclick="switchTab('subscription')">💳 Abonnement</button>
+            <button class="tab-button" onclick="switchTab('billing')">📋 Facturation</button>
+            <button class="tab-button" onclick="switchTab('preferences')">🔔 Préférences</button>
+            <button class="tab-button" onclick="switchTab('security')">🔒 Sécurité</button>
+        </div>
+
+        <!-- TAB 1 : PROFIL -->
+        <div id="profile" class="tab-content active">
+            <div class="success-message" id="profileSuccess">✅ Votre profil a été mis à jour avec succès !</div>
+
+            <div class="section">
+                <div class="section-title">Informations personnelles</div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Prénom</label>
+                        <input type="text" id="firstName" placeholder="Sophie">
+                    </div>
+                    <div class="form-group">
+                        <label>Nom</label>
+                        <input type="text" id="lastName" placeholder="Martin">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" placeholder="sophie.martin@med.fr">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Promotion</label>
+                        <select id="promotion">
+                            <option value="DFASM1">DFASM1</option>
+                            <option value="DFASM2">DFASM2</option>
+                            <option value="DFASM3">DFASM3</option>
+                            <option value="Interne">Interne</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Faculté de médecine</label>
+                        <select id="medicalSchool">
+                            <option value="Université Paris Cité">Université Paris Cité</option>
+                            <option value="Université Lyon 1">Université Lyon 1</option>
+                            <option value="Aix-Marseille Université">Aix-Marseille Université</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="saveProfile()">💾 Enregistrer les modifications</button>
+                    <button class="btn btn-secondary" onclick="resetProfile()">↩️ Annuler</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2 : ABONNEMENT -->
+        <div id="subscription" class="tab-content">
+            <div id="subscriptionContent"></div>
+        </div>
+
+        <!-- TAB 3 : FACTURATION -->
+        <div id="billing" class="tab-content">
+            <div class="section">
+                <div class="section-title">Historique de facturation</div>
+                <table class="billing-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Montant</th>
+                            <th>Statut</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>22 octobre 2025</td>
+                            <td>Abonnement mensuel</td>
+                            <td>29,00 €</td>
+                            <td><span class="billing-status status-paid">Payée</span></td>
+                            <td><a href="#" style="color: #2563EB; text-decoration: none;">📥 PDF</a></td>
+                        </tr>
+                        <tr>
+                            <td>22 septembre 2025</td>
+                            <td>Abonnement mensuel</td>
+                            <td>29,00 €</td>
+                            <td><span class="billing-status status-paid">Payée</span></td>
+                            <td><a href="#" style="color: #2563EB; text-decoration: none;">📥 PDF</a></td>
+                        </tr>
+                        <tr>
+                            <td>22 août 2025</td>
+                            <td>Abonnement mensuel</td>
+                            <td>29,00 €</td>
+                            <td><span class="billing-status status-paid">Payée</span></td>
+                            <td><a href="#" style="color: #2563EB; text-decoration: none;">📥 PDF</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Moyens de paiement</div>
+                
+                <div style="background: #F9FAFB; border: 2px dashed #E5E7EB; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <span style="font-size: 32px;">💳</span>
+                            <div>
+                                <div style="font-weight: 600; color: #111827;">Carte Visa</div>
+                                <div style="font-size: 14px; color: #6B7280;">Se terminant par 4242</div>
+                                <div style="font-size: 12px; color: #9CA3AF;">Expire en 12/2026</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary">Modifier</button>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="addPaymentMethod()">➕ Ajouter une carte</button>
+            </div>
+        </div>
+
+        <!-- TAB 4 : PRÉFÉRENCES -->
+        <div id="preferences" class="tab-content">
+            <div class="section">
+                <div class="section-title">Notifications par email</div>
+
+                <div class="preference-item">
+                    <div class="preference-label">
+                        <div class="preference-title">Rappels d'étude</div>
+                        <div class="preference-description">Recevez des rappels pour continuer vos révisions</div>
+                    </div>
+                    <div class="toggle active" onclick="toggleNotification(this)">
+                        <div class="toggle-dot"></div>
+                    </div>
+                </div>
+
+                <div class="preference-item">
+                    <div class="preference-label">
+                        <div class="preference-title">Newsletters</div>
+                        <div class="preference-description">Recevez les nouveautés et conseils d'apprentissage</div>
+                    </div>
+                    <div class="toggle" onclick="toggleNotification(this)">
+                        <div class="toggle-dot"></div>
+                    </div>
+                </div>
+
+                <div class="preference-item">
+                    <div class="preference-label">
+                        <div class="preference-title">Progressions et achievements</div>
+                        <div class="preference-description">Notifications pour vos jalons et réussites</div>
+                    </div>
+                    <div class="toggle active" onclick="toggleNotification(this)">
+                        <div class="toggle-dot"></div>
+                    </div>
+                </div>
+
+                <div class="preference-item">
+                    <div class="preference-label">
+                        <div class="preference-title">Mises à jour de l'application</div>
+                        <div class="preference-description">Notifiez-moi des nouvelles fonctionnalités</div>
+                    </div>
+                    <div class="toggle" onclick="toggleNotification(this)">
+                        <div class="toggle-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Préférences d'apprentissage</div>
+
+                <div class="form-group">
+                    <label>Niveau cible</label>
+                    <select>
+                        <option>DFASM (Diplôme de Formation Approfondie en Santé)</option>
+                        <option>Internat</option>
+                        <option>DES</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Spécialités prioritaires</label>
+                    <input type="text" placeholder="Ex: Cardiologie, Pneumologie">
+                </div>
+
+                <button class="btn btn-primary">💾 Enregistrer les préférences</button>
+            </div>
+        </div>
+
+        <!-- TAB 5 : SÉCURITÉ -->
+        <div id="security" class="tab-content">
+            <div class="section">
+                <div class="section-title">Mot de passe</div>
+                
+                <div class="form-group">
+                    <label>Mot de passe actuel</label>
+                    <input type="password" placeholder="••••••••">
+                </div>
+
+                <div class="form-group">
+                    <label>Nouveau mot de passe</label>
+                    <input type="password" placeholder="••••••••">
+                </div>
+
+                <div class="form-group">
+                    <label>Confirmer le nouveau mot de passe</label>
+                    <input type="password" placeholder="••••••••">
+                </div>
+
+                <button class="btn btn-primary" onclick="changePassword()">🔐 Changer le mot de passe</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Sessions actives</div>
+                <p style="color: #6B7280; margin-bottom: 16px;">Gérez les appareils qui accèdent à votre compte MedFormation</p>
+
+                <div style="background: #F9FAFB; border: 1px solid #E5E7EB; border-radius: 10px; padding: 16px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div>
+                            <div style="font-weight: 600; color: #111827;">💻 Chrome sur Windows</div>
+                            <div style="font-size: 13px; color: #6B7280;">Saint-Denis, France · Connecté maintenant</div>
+                        </div>
+                        <button class="btn btn-secondary" style="padding: 8px 16px;">Déconnecter</button>
+                    </div>
+                </div>
+
+                <button class="btn btn-secondary" onclick="logout()">🚪 Déconnecter de tous les appareils</button>
+            </div>
+
+            <div class="section danger-zone">
+                <h3>⚠️ Zone dangereuse</h3>
+                <p>Une fois supprimé, votre compte ne peut pas être récupéré. Soyez certain.</p>
+                <button class="btn btn-danger" onclick="deleteAccount()">🗑️ Supprimer mon compte</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Vérifier connexion
+        if (!localStorage.getItem('isLoggedIn')) {
+            window.location.href = 'login.html';
+        }
+
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        
+        // Avatar
+        if (currentUser.firstName && currentUser.lastName) {
+            const initials = currentUser.firstName.charAt(0) + currentUser.lastName.charAt(0);
+            document.getElementById('userAvatar').textContent = initials.toUpperCase();
+        }
+
+        // Remplir le formulaire profil
+        document.getElementById('firstName').value = currentUser.firstName || '';
+        document.getElementById('lastName').value = currentUser.lastName || '';
+        document.getElementById('email').value = currentUser.email || '';
+        document.getElementById('promotion').value = currentUser.promotion || 'DFASM1';
+        document.getElementById('medicalSchool').value = currentUser.medical_school || 'Université Paris Cité';
+
+        // Afficher l'abonnement
+        function displaySubscription() {
+            const html = `
+                <div class="subscription-card">
+                    <h3>${currentUser.subscription_status === 'active' ? '✅ Abonnement Premium' : '📦 Plan Gratuit'}</h3>
+                    <div class="subscription-status">
+                        ${currentUser.subscription_status === 'active' 
+                            ? 'Vous bénéficiez de tous les contenus premium' 
+                            : 'Accès limité aux contenus'}
+                    </div>
+                    <div class="subscription-details">
+                        <div class="subscription-detail">
+                            <div class="subscription-detail-label">Plan</div>
+                            <div class="subscription-detail-value">
+                                ${currentUser.subscription_plan === 'monthly' ? 'Mensuel (29€/mois)' : 
+                                  currentUser.subscription_plan === 'yearly' ? 'Annuel (199€/an)' : 
+                                  'Gratuit'}
+                            </div>
+                        </div>
+                        <div class="subscription-detail">
+                            <div class="subscription-detail-label">Date de renouvellement</div>
+                            <div class="subscription-detail-value">${currentUser.subscription_end_date || 'N/A'}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Actions</div>
+                    ${currentUser.subscription_status === 'active' 
+                        ? `
+                            <div class="btn-group">
+                                <button class="btn btn-secondary" onclick="changePlan()">📋 Changer de plan</button>
+                                <button class="btn btn-danger" onclick="cancelSubscription()">❌ Annuler l'abonnement</button>
+                            </div>
+                        `
+                        : `
+                            <p style="color: #6B7280; margin-bottom: 16px;">Passez à Premium pour accéder à tous les contenus</p>
+                            <a href="pricing.html" class="btn btn-primary">💳 S'abonner maintenant</a>
+                        `
+                    }
+                </div>
+            `;
+            document.getElementById('subscriptionContent').innerHTML = html;
+        }
+        displaySubscription();
+
+        // Fonctions
+        function switchTab(tabName) {
+            // Masquer tous les tabs
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+
+            // Afficher le tab sélectionné
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function saveProfile() {
+            const updatedUser = {
+                ...currentUser,
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                promotion: document.getElementById('promotion').value,
+                medical_school: document.getElementById('medicalSchool').value
+            };
+            localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+            document.getElementById('profileSuccess').classList.add('show');
+            setTimeout(() => document.getElementById('profileSuccess').classList.remove('show'), 3000);
+        }
+
+        function resetProfile() {
+            document.getElementById('firstName').value = currentUser.firstName || '';
+            document.getElementById('lastName').value = currentUser.lastName || '';
+            document.getElementById('email').value = currentUser.email || '';
+            document.getElementById('promotion').value = currentUser.promotion || 'DFASM1';
+            document.getElementById('medicalSchool').value = currentUser.medical_school || 'Université Paris Cité';
+        }
+
+        function toggleNotification(element) {
+            element.classList.toggle('active');
+        }
+
+        function changePassword() {
+            alert('🔐 Fonction de changement de mot de passe (simulation)');
+        }
+
+        function addPaymentMethod() {
+            alert('💳 Ajout d\'une nouvelle carte (simulation)');
+        }
+
+        function changePlan() {
+            window.location.href = 'pricing.html';
+        }
+
+        function cancelSubscription() {
+            if (confirm('Êtes-vous sûr de vouloir annuler votre abonnement ?')) {
+                alert('❌ Abonnement annulé (simulation)');
+            }
+        }
+
+        function deleteAccount() {
+            if (confirm('Êtes-vous VRAIMENT sûr ? Cette action est irréversible.')) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('currentUser');
+                alert('🗑️ Compte supprimé');
+                window.location.href = 'index.html';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('currentUser');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
