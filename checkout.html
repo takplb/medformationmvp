@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - MedFormation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #F9FAFB;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 16px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            color: #2563EB;
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .checkout-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .checkout-form {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid #E5E7EB;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #E5E7EB;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: #F9FAFB;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2563EB;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+        }
+
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        .divider {
+            height: 1px;
+            background: #E5E7EB;
+            margin: 32px 0;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #2563EB;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary:disabled {
+            background: #D1D5DB;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Order Summary */
+        .order-summary {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid #E5E7EB;
+            position: sticky;
+            top: 120px;
+        }
+
+        .summary-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 24px;
+        }
+
+        .plan-card {
+            background: linear-gradient(135deg, #2563EB 0%, #1d4ed8 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .plan-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .plan-price {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .plan-period {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .summary-details {
+            margin-bottom: 24px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #E5E7EB;
+            font-size: 14px;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .detail-label {
+            color: #6B7280;
+        }
+
+        .detail-value {
+            color: #111827;
+            font-weight: 600;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-top: 2px solid #E5E7EB;
+            border-bottom: 2px solid #E5E7EB;
+            margin-bottom: 24px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 24px;
+        }
+
+        .features-list li {
+            padding: 8px 0;
+            color: #6B7280;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .features-list li::before {
+            content: "✓";
+            color: #10B981;
+            font-weight: 700;
+        }
+
+        .security-badges {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        .badge-icon {
+            font-size: 18px;
+        }
+
+        .success-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translate(-50%, -40%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%);
+                opacity: 1;
+            }
+        }
+
+        .success-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+
+        .success-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .success-message p {
+            color: #6B7280;
+            margin-bottom: 24px;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .order-summary {
+                position: static;
+            }
+
+            .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="dashboard.html" class="logo">🏥 MedFormation</a>
+    </header>
+
+    <div class="checkout-container">
+        <!-- Formulaire de paiement -->
+        <div class="checkout-form">
+            <!-- Adresse de facturation -->
+            <div class="section-title">
+                <span>📍</span>
+                Adresse de facturation
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Prénom</label>
+                    <input type="text" placeholder="Sophie">
+                </div>
+                <div class="form-group">
+                    <label>Nom</label>
+                    <input type="text" placeholder="Martin">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" placeholder="sophie@example.com">
+            </div>
+
+            <div class="form-group">
+                <label>Adresse</label>
+                <input type="text" placeholder="123 Rue de la Médecine">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Ville</label>
+                    <input type="text" placeholder="Paris">
+                </div>
+                <div class="form-group">
+                    <label>Code postal</label>
+                    <input type="text" placeholder="75001">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Pays</label>
+                <select>
+                    <option value="FR">France</option>
+                    <option value="BE">Belgique</option>
+                    <option value="CH">Suisse</option>
+                    <option value="LU">Luxembourg</option>
+                </select>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- Moyens de paiement -->
+            <div class="section-title">
+                <span>💳</span>
+                Informations de paiement
+            </div>
+
+            <div class="form-group">
+                <label>Numéro de carte</label>
+                <input type="text" placeholder="4242 4242 4242 4242" id="cardNumber">
+            </div>
+
+            <div class="form-row-3">
+                <div class="form-group">
+                    <label>Expiration (MM/AA)</label>
+                    <input type="text" placeholder="12/26">
+                </div>
+                <div class="form-group">
+                    <label>CVC</label>
+                    <input type="text" placeholder="123">
+                </div>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="terms" checked>
+                <label for="terms">J'accepte les conditions d'utilisation et la politique de confidentialité</label>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="billing">
+                <label for="billing">Facturez-moi automatiquement à chaque renouvellement</label>
+            </div>
+
+            <button class="btn btn-primary" onclick="processPayment()">💳 Compléter le paiement</button>
+
+            <p style="text-align: center; color: #6B7280; font-size: 12px; margin-top: 16px;">
+                Votre paiement est sécurisé et chiffré par Stripe
+            </p>
+        </div>
+
+        <!-- Résumé de la commande -->
+        <div class="order-summary">
+            <div class="summary-title">Résumé de la commande</div>
+
+            <div class="plan-card" id="planCard">
+                <div class="plan-name">Plan Mensuel</div>
+                <div class="plan-price">29€</div>
+                <div class="plan-period">par mois, sans engagement</div>
+            </div>
+
+            <div class="summary-details">
+                <div class="detail-row">
+                    <span class="detail-label">Sous-total</span>
+                    <span class="detail-value" id="subtotal">29,00 €</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">TVA (20%)</span>
+                    <span class="detail-value" id="tax">5,80 €</span>
+                </div>
+            </div>
+
+            <div class="total-row">
+                <span>Total</span>
+                <span id="total">34,80 €</span>
+            </div>
+
+            <div style="background: #F9FAFB; padding: 16px; border-radius: 10px; margin-bottom: 24px;">
+                <p style="font-size: 13px; color: #6B7280; margin-bottom: 12px;">📋 Ce que vous obtenez :</p>
+                <ul class="features-list">
+                    <li>Accès illimité à tous les cours vidéo</li>
+                    <li>500+ questions QCM avec corrections détaillées</li>
+                    <li>100+ fiches ECOS complètes</li>
+                    <li>Examens blancs chronométrés</li>
+                    <li>Suivi détaillé de votre progression</li>
+                    <li>Algorithme de révision intelligent</li>
+                    <li>Support prioritaire</li>
+                    <li>Accès aux nouvelles spécialités</li>
+                </ul>
+            </div>
+
+            <div style="background: #ECFDF5; padding: 12px; border-radius: 10px; margin-bottom: 24px;">
+                <p style="font-size: 13px; color: #065F46;">
+                    ✅ <strong>Garantie satisfaction</strong> : Remboursement 30 jours si vous n'êtes pas satisfait
+                </p>
+            </div>
+
+            <div class="security-badges">
+                <div class="badge">
+                    <div class="badge-icon">🔒</div>
+                    <div>SSL Sécurisé</div>
+                </div>
+                <div class="badge">
+                    <div class="badge-icon">✓</div>
+                    <div>Stripe</div>
+                </div>
+                <div class="badge">
+                    <div class="badge-icon">💳</div>
+                    <div>PCI Compliant</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="overlay" id="overlay"></div>
+    <div class="success-message" id="successMessage">
+        <div class="success-icon">✅</div>
+        <div class="success-title">Abonnement activé !</div>
+        <p>Vous avez accès à tous les contenus premium. Bienvenue sur MedFormation !</p>
+        <button class="btn btn-primary" onclick="redirectToDashboard()" style="max-width: 300px;">
+            Aller au dashboard
+        </button>
+    </div>
+
+    <script>
+        // Récupérer le plan depuis l'URL
+        const params = new URLSearchParams(window.location.search);
+        const plan = params.get('plan') || 'monthly';
+
+        // Mettre à jour les prix selon le plan
+        function updatePlanInfo() {
+            if (plan === 'yearly') {
+                document.querySelector('.plan-name').textContent = 'Plan Annuel';
+                document.querySelector('.plan-price').textContent = '199€';
+                document.querySelector('.plan-period').textContent = 'par an (soit 16,58€/mois)';
+                document.getElementById('subtotal').textContent = '199,00 €';
+                document.getElementById('tax').textContent = '39,80 €';
+                document.getElementById('total').textContent = '238,80 €';
+            }
+        }
+        updatePlanInfo();
+
+        // Formater le numéro de carte
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s/g, '');
+            let formatted = value.replace(/(\d{4})/g, '$1 ').trim();
+            e.target.value = formatted;
+        });
+
+        // Traiter le paiement
+        function processPayment() {
+            const terms = document.getElementById('terms').checked;
+            if (!terms) {
+                alert('Veuillez accepter les conditions d\'utilisation');
+                return;
+            }
+
+            // Simuler le traitement du paiement
+            document.querySelector('.btn-primary').disabled = true;
+            document.querySelector('.btn-primary').textContent = 'Traitement...';
+
+            setTimeout(() => {
+                // Mettre à jour les données utilisateur
+                const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+                currentUser.subscription_status = 'active';
+                currentUser.subscription_plan = plan;
+                const endDate = new Date();
+                if (plan === 'yearly') {
+                    endDate.setFullYear(endDate.getFullYear() + 1);
+                } else {
+                    endDate.setMonth(endDate.getMonth() + 1);
+                }
+                currentUser.subscription_end_date = endDate.toLocaleDateString('fr-FR');
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+                // Afficher le message de succès
+                document.getElementById('overlay').classList.add('show');
+                document.getElementById('successMessage').classList.add('show');
+            }, 1500);
+        }
+
+        // Rediriger vers le dashboard
+        function redirectToDashboard() {
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>
