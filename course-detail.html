@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item 339 - Syndrome Coronarien Aigu - MedFormation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #F9FAFB;
+            color: #374151;
+            line-height: 1.7;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            color: #2563EB;
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 73px;
+            bottom: 0;
+            width: 260px;
+            background: white;
+            border-right: 1px solid #E5E7EB;
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #6B7280;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: #F9FAFB;
+            color: #2563EB;
+        }
+
+        .nav-item.active {
+            background: #EFF6FF;
+            color: #2563EB;
+            border-right: 3px solid #2563EB;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 40px;
+            max-width: 1200px;
+        }
+
+        .course-header {
+            background: linear-gradient(135deg, #2563EB 0%, #1d4ed8 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+        }
+
+        .course-header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .video-player {
+            width: 100%;
+            height: 500px;
+            background: #000;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 48px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .video-controls button {
+            background: #2563EB;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .video-controls button:hover {
+            background: #1d4ed8;
+            transform: scale(1.05);
+        }
+
+        .course-content {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            border: 1px solid #E5E7EB;
+        }
+
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #2563EB;
+        }
+
+        .section h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+            margin-top: 24px;
+            margin-bottom: 16px;
+        }
+
+        .section p {
+            margin-bottom: 16px;
+            color: #6B7280;
+            line-height: 1.8;
+        }
+
+        .highlight {
+            background: #FEF3C7;
+            border-left: 4px solid #F59E0B;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .highlight strong {
+            color: #B45309;
+        }
+
+        .key-points {
+            background: #ECFDF5;
+            border-left: 4px solid #10B981;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .key-points ul {
+            margin-left: 20px;
+            list-style: none;
+        }
+
+        .key-points li {
+            margin: 8px 0;
+            color: #065F46;
+            position: relative;
+            padding-left: 24px;
+        }
+
+        .key-points li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #10B981;
+            font-weight: 700;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #EFF6FF;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+            color: #111827;
+            border-bottom: 2px solid #2563EB;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #E5E7EB;
+            color: #6B7280;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #F9FAFB;
+        }
+
+        .danger-box {
+            background: #FEF2F2;
+            border-left: 4px solid #EF4444;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .danger-box strong {
+            color: #991B1B;
+        }
+
+        .download-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid #E5E7EB;
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #2563EB;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            background: #E5E7EB;
+            color: #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #D1D5DB;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #2563EB;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .back-button:hover {
+            text-decoration: underline;
+        }
+
+        .mnemonic {
+            background: #F3E8FF;
+            border-left: 4px solid #A855F7;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+
+        .learning-box {
+            background: #EFF6FF;
+            border-left: 4px solid #2563EB;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+
+            .course-header {
+                padding: 24px;
+            }
+
+            .course-header h1 {
+                font-size: 24px;
+            }
+
+            .section h2 {
+                font-size: 22px;
+            }
+
+            .video-player {
+                height: 300px;
+            }
+
+            .course-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="dashboard.html" class="logo">🏥 MedFormation</a>
+    </header>
+
+    <aside class="sidebar">
+        <a href="dashboard.html" class="nav-item">
+            <span>🏠</span> Dashboard
+        </a>
+        <a href="courses.html" class="nav-item active">
+            <span>📚</span> Cours
+        </a>
+        <a href="qcm.html" class="nav-item">
+            <span>✏️</span> QCM
+        </a>
+        <a href="ecos.html" class="nav-item">
+            <span>🎯</span> ECOS
+        </a>
+        <a href="progress.html" class="nav-item">
+            <span>📊</span> Progression
+        </a>
+        <a href="account.html" class="nav-item">
+            <span>⚙️</span> Mon Compte
+        </a>
+    </aside>
+
+    <main class="main-content">
+        <a href="courses.html" class="back-button">← Retour à la bibliothèque</a>
+
+        <div class="course-header">
+            <h1>Item 339 : Syndrome Coronarien Aigu</h1>
+            <div class="course-meta">
+                <span>❤️ Cardiologie</span>
+                <span>⏱️ 21 minutes</span>
+                <span>📊 Niveau moyen</span>
+            </div>
+        </div>
+
+        <div class="video-player">
+            ▶️
+            <div class="video-controls">
+                <button onclick="playVideo()">Lecture</button>
+                <button onclick="pauseVideo()">Pause</button>
+                <button onclick="toggleFullscreen()">Plein écran</button>
+            </div>
+        </div>
+
+        <div class="course-content">
+            <!-- SECTION 1 -->
+            <div class="section">
+                <h2>1. Bases physiopathologiques (Rang B 🔵)</h2>
+                
+                <p>Le syndrome coronarien aigu est une <strong>manifestation/complication aiguë de la maladie athéromateuse</strong> localisée dans les coronaires, et en général 80% du mode d'entrée dans la maladie coronaire.</p>
+
+                <p>Il correspond à une <strong>rupture ±complète de la plaque d'athérome</strong> qui va provoquer l'adhésion et l'activation plaquettaire jusqu'à la formation d'un <strong>thrombus intraluminal</strong>, on parle d'accident athérothrombotique.</p>
+
+                <p>La réduction du flux vasculaire par <strong>occlusion ± complète du vaisseau</strong> conduit à une <strong>ischémie myocardique</strong> et aboutit à terme à la <strong>nécrose</strong> de celui-ci.</p>
+
+                <div class="highlight">
+                    <strong>À RETENIR +</strong><br>
+                    Ce sont les plaques d'athérome dite <strong>vulnérables</strong> qui sont à l'origine du SCA, les facteurs de vulnérabilité (donc de rupture) de la plaque sont :<br>
+                    • Un cœur lipidique important<br>
+                    • Une chape fibreuse fine<br>
+                    • L'hypercholestérolémie<br>
+                    • L'intoxication tabagique<br>
+                    • L'hyperfibrinémie
+                </div>
+
+                <h3>Facteurs déclenchants</h3>
+                <p>Certains éléments peuvent être des facteurs déclenchants de rupture de la plaque :</p>
+                <ul style="margin-left: 20px; list-style: disc; color: #6B7280;">
+                    <li>Exercice physique violent</li>
+                    <li>Manque de sommeil</li>
+                    <li>Excès alimentaire</li>
+                    <li>Infection aiguë</li>
+                </ul>
+            </div>
+
+            <!-- SECTION 2 -->
+            <div class="section">
+                <h2>2. Définitions - Épidémiologie (Rang A 🔴)</h2>
+
+                <h3>2.1 Définitions essentielles</h3>
+
+                <p>Beaucoup de définitions dans ce chapitre, parfois pas très claires (définitions françaises vs anglo-saxonnes, anciennes vs nouvelles, définitions cliniques vs physiopathologiques) mais elles sont <strong>importantes à connaître +++</strong> car elles conditionnent la prise en charge.</p>
+
+                <h3>Infarctus du myocarde</h3>
+                <p>Bien que proches, il est important de souligner que le <strong>SCA n'est pas équivalent à l'IM</strong>. L'infarctus du myocarde aigu (IMA) est défini comme une <strong>nécrose de cardiomyocytes</strong> survenant dans un contexte clinique d'ischémie myocardique aiguë.</p>
+
+                <div class="learning-box">
+                    <strong>À RETENIR :</strong><br>
+                    La définition diagnostique repose sur l'association :<br>
+                    • <strong>Troponine élevée</strong> (> 99e%) avec cinétique (↑ ou ↓) + au moins 1 critère d'ischémie<br>
+                    • <strong>Symptômes typiques</strong> (douleur thoracique, équivalents angineux)<br>
+                    • <strong>Changements ECG</strong> nouveaux (onde Q pathologique, sus-/sous-décalage ST, T inversée)<br>
+                    • <strong>Imagerie</strong> montrant perte de viabilité myocardique<br>
+                    • <strong>Thrombus coronarien</strong> à l'angiographie ou autopsie
+                </div>
+
+                <h3>Types d'infarctus du myocarde</h3>
+                <table>
+                    <tr>
+                        <th>Type</th>
+                        <th>Mécanisme</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Type 1</strong></td>
+                        <td>Rupture/érosion de plaque → thrombose coronarienne</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Type 2</strong></td>
+                        <td>Déséquilibre apport/besoins en O₂ (spasme, anémie, tachy-/bradyarythmie, hypotension)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Type 3</strong></td>
+                        <td>Mort subite avec suspicion d'IM, biomarqueurs non disponibles</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Type 4-5</strong></td>
+                        <td>Iatrogène : angioplastie (4a), thrombose de stent (4b), resténose (4c), pontage (5)</td>
+                    </tr>
+                </table>
+
+                <h3>Syndrome coronarien aigu</h3>
+                <p>Les SCA englobent un <strong>large spectre de présentations cliniques</strong>, allant de patients asymptomatiques au moment de la présentation jusqu'à ceux présentant une douleur thoracique persistante, un arrêt cardiaque, ou un choc cardiogénique.</p>
+
+                <div class="danger-box">
+                    <strong>À RETENIR :</strong><br>
+                    Dans le SCA le motif principal de consultation est la douleur thoracique. Sont à considérer comme un SCA :<br>
+                    • Toute angine prolongée (> 20 minutes) au repos<br>
+                    • Toute angine d'apparition récente (< 1 mois) sévère<br>
+                    • Toute angine augmentant en fréquence, en durée ou survenant pour un effort moindre<br>
+                    • Toute angine survenant après un épisode récent d'infarctus
+                </div>
+
+                <h3>SCA ST+ vs SCA ST-</h3>
+                <table>
+                    <tr>
+                        <th>Critère</th>
+                        <th>SCA ST+ (STEMI)</th>
+                        <th>IDM NST (NSTEMI)</th>
+                    </tr>
+                    <tr>
+                        <td>Âge</td>
+                        <td>50-60 ans</td>
+                        <td>70 ans</td>
+                    </tr>
+                    <tr>
+                        <td>Genre</td>
+                        <td>Homme +++</td>
+                        <td>Homme ++ et Femmes</td>
+                    </tr>
+                    <tr>
+                        <td>Facteur de risque</td>
+                        <td>Fumeur, peu de comorbités</td>
+                        <td>Diabétique, insuffisant rénal</td>
+                    </tr>
+                    <tr>
+                        <td>Mécanisme</td>
+                        <td>Rupture complète + gros thrombus rouge fibrino-cruorique</td>
+                        <td>Érosion/rupture partielle + petit thrombus blanc plaquettaire</td>
+                    </tr>
+                    <tr>
+                        <td>Risque immédiat</td>
+                        <td>Mort subite par trouble du rythme</td>
+                        <td>Moins de risque immédiat</td>
+                    </tr>
+                    <tr>
+                        <td>Pronostic long terme</td>
+                        <td>Bon si bien pris en charge</td>
+                        <td>Sombre : FDR multiples, comorbidités, coronaropathie pluritronculaire</td>
+                    </tr>
+                </table>
+
+                <h3>2.2 Épidémiologie</h3>
+
+                <h4>Incidence</h4>
+                <ul style="margin-left: 20px; list-style: disc; color: #6B7280;">
+                    <li><strong>Europe :</strong> ≈ 293 cas / 100 000 habitants/an (IC95 : 196–530)</li>
+                    <li><strong>IDM ST+ :</strong> 43-144 / 100 000 habitants/an</li>
+                    <li><strong>France :</strong> Plus de 60 000 hospitalisations/an pour IDM</li>
+                </ul>
+
+                <p><strong>📉 L'incidence du SCA ST+ diminue</strong>, probablement grâce à la prévention primaire (tabac, dyslipidémie, HTA).</p>
+                <p><strong>📈 Celle du SCA ST– augmente</strong>, en lien avec la meilleure détection via la troponine ultrasensible.</p>
+
+                <h4>Répartition sexe et âge</h4>
+                <ul style="margin-left: 20px; list-style: disc; color: #6B7280;">
+                    <li>Les hommes jeunes sont plus touchés</li>
+                    <li>Chez la femme, la maladie coronarienne apparaît 7 à 10 ans plus tard</li>
+                    <li>Avant 60 ans : SCA 4× plus fréquent chez l'homme</li>
+                    <li>Après 75 ans : SCA plus fréquent chez la femme</li>
+                    <li>Les formes féminines sont souvent atypiques et diagnostiquées plus tardivement</li>
+                </ul>
+
+                <h4>Mortalité</h4>
+                <ul style="margin-left: 20px; list-style: disc; color: #6B7280;">
+                    <li><strong>Hospitalière :</strong> 4-12%</li>
+                    <li><strong>À 1 an :</strong> environ 10%</li>
+                    <li><strong>Plus élevée en cas de :</strong> âge avancé, diabète, insuffisance rénale ou cardiaque, antécédents d'IDM, coronaropathie diffuse, délai prolongé de reperfusion</li>
+                </ul>
+            </div>
+
+            <!-- SECTION 3 -->
+            <div class="section">
+                <h2>3. Clinique (Rang A 🔴)</h2>
+
+                <h3>3.1 Angine de poitrine ou Angor</h3>
+
+                <h4>Douleur angineuse typique</h4>
+                <p><strong>Localisation :</strong> Rétrosternale, car c'est directement le myocarde qui souffre d'ischémie. Le cœur est situé derrière le sternum, au centre du thorax.</p>
+
+                <p><strong>Type :</strong> Constrictive - L'ischémie myocardique provoque une souffrance musculaire intense : c'est une douleur constrictive, oppressante, comme une crampe au cœur.</p>
+
+                <p><strong>Irradiations :</strong> Suivent les territoires nerveux communs avec les artères coronaires :</p>
+                <ul style="margin-left: 20px; list-style: disc; color: #6B7280;">
+                    <li>Vers le bras gauche et l'épaule</li>
+                    <li>Vers la mâchoire ou le cou</li>
+                </ul>
+
+                <div class="learning-box">
+                    <strong>À RETENIR :</strong><br>
+                    L'angor typique est :<br>
+                    • Rétrosternale en barre<br>
+                    • Constrictive<br>
+                    • Peut irradier vers le bras gauche, le droit voire les deux, et le cou, la mâchoire
+                </div>
+
+                <h4>Présentation atypique</h4>
+                <div class="danger-box">
+                    <strong>À RETENIR :</strong><br>
+                    La présentation atypique est :<br>
+                    • Absence de douleur<br>
+                    • Douleur épigastrique ou symptômes mimant l'indigestion<br>
+                    • Douleur limitée à ses irradiations<br>
+                    • Brûlure peu intense<br>
+                    • Dyspnée ou asthénie<br>
+                    <br>
+                    Plus fréquente chez :<br>
+                    • Les patients âgés<br>
+                    • De sexe féminin<br>
+                    • Diabétiques<br>
+                    • Insuffisants rénaux<br>
+                    • Atteints d'une démence
+                </div>
+
+                <h3>3.2 Examen physique</h3>
+                <p>L'examen physique est <strong>habituellement sans particularité</strong> en l'absence de complication. Il faut néanmoins être systématique afin d'éliminer :</p>
+                <ul style="margin-left: 20px; list-style: disc; color: #6B7280;">
+                    <li>Une mauvaise tolérance hémodynamique (révélant un choc cardiogénique)</li>
+                    <li>Des manifestations d'insuffisance cardiaque congestive</li>
+                    <li>Un souffle systolique (synonyme de complication mécanique)</li>
+                    <li>Tachycardie (trouble du rythme) ou bradycardie (trouble de conduction)</li>
+                </ul>
+
+                <h3>3.3 Facteurs de risque</h3>
+                <div class="key-points">
+                    <ul>
+                        <li>Age +++</li>
+                        <li>Sexe masculin</li>
+                        <li>Tabagisme</li>
+                        <li>Hérédité coronarienne</li>
+                        <li>Diabète</li>
+                        <li>Dyslipidémie</li>
+                        <li>Hypertension artérielle</li>
+                        <li>Insuffisance rénale chronique</li>
+                        <li>Atteinte athéromateuse déjà documentée (coronaire, AOMI, TSA)</li>
+                    </ul>
+                </div>
+
+                <h3>3.4 ECG (Rang A +++)</h3>
+                <div class="danger-box">
+                    <strong>À RETENIR +++</strong><br>
+                    L'ECG 12 dérivations est l'examen de première intention qui doit être pratiqué <strong>sans délai</strong> dès lors que le diagnostic de SCA est suspecté et être interprété par un professionnel qualifié dans les <strong>10 minutes</strong>.
+                </div>
+
+                <h4>SCA ST+ (STEMI)</h4>
+                <p>Chez un patient présentant une douleur angineuse persistante, l'ECG percritique confirme l'occlusion coronarienne aiguë lorsqu'il met en évidence :</p>
+                <ul style="margin-left: 20px; list-style: disc; color: #6B7280;">
+                    <li>Dans au moins 2 dérivations contiguës</li>
+                    <li>Un <strong>sus-décalage</strong> classiquement convexe vers le haut du segment ST</li>
+                    <li>≥ 2 mm (≥ 2,5 mm chez les hommes < 40 ans, ≥ 1,5 mm chez les femmes) en V2-V3</li>
+                    <li>≥ 1 mm dans les autres dérivations</li>
+                </ul>
+
+                <div class="mnemonic">
+                    <strong>Localisations courantes (questions fréquentes +++) :</strong><br>
+                    • D2-D3-aVF = Inférieur<br>
+                    • V1-V2-V3 = Antéroseptal<br>
+                    • V4 = Apical<br>
+                    • V5-V6 = Latéral bas<br>
+                    • D1-aVL = Latéral haut
+                </div>
+
+                <h4>SCA ST- (NSTE-ACS)</h4>
+                <p>L'ECG post-critique est <strong>normal chez plus de 30%</strong> des patients admis pour un SCA ST-. Un ECG normal n'élimine donc pas un SCA.</p>
+
+                <div class="learning-box">
+                    <strong>À RETENIR</strong><br>
+                    Les anomalies ECG en faveur du diagnostic sont :<br>
+                    • Le <strong>sous-décalage du segment ST</strong><br>
+                    • Le <strong>sus-décalage transitoire</strong><br>
+                    • Les <strong>anomalies de l'onde T</strong>
+                </div>
+
+                <h3>3.5 Biomarqueurs</h3>
+
+                <h4>Troponine</h4>
+                <p>C'est un <strong>marqueur essentiel</strong> pour confirmer le diagnostic d'un IDM et dans la démarche diagnostique du SCA ST–.</p>
+
+                <p>Habituellement, la Tn-us est très sensible, croît rapidement dans l'heure qui suit la douleur thoracique et demeure élevée durant plusieurs jours.</p>
+
+                <div class="danger-box">
+                    <strong>À RETENIR</strong><br>
+                    Bien que sensible, la spécificité est limitée car son élévation peut être observée dans de nombreuses situations autres qu'un SCA :<br>
+                    • Tachyarythmie<br>
+                    • Insuffisance cardiaque<br>
+                    • Poussée hypertensive<br>
+                    • Myocardite<br>
+                    • Valvulopathie<br>
+                    • Embolie pulmonaire<br>
+                    • Dissection aortique<br>
+                    • Takotsubo
+                </div>
+            </div>
+
+            <!-- SECTION 4 -->
+            <div class="section">
+                <h2>4. Prise en charge initiale</h2>
+
+                <h3>4.1 Pré-hospitalier - Les 4 temps de la prise en charge</h3>
+
+                <table>
+                    <tr>
+                        <th>Étape</th>
+                        <th>Délai cible</th>
+                        <th>Objectif principal</th>
+                        <th>Actions clés</th>
+                    </tr>
+                    <tr>
+                        <td><strong>1. Symptôme → Appel au 15</strong></td>
+                        <td>Dès la douleur</td>
+                        <td>Activer le système d'urgence</td>
+                        <td>Patient ou entourage appelle SAMU immédiatement</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Intervention SMUR</strong></td>
+                        <td>< 15 min</td>
+                        <td>Diagnostic et conditionnement</td>
+                        <td>ECG 12D sur place, VVP, scope, O₂, traitement antithrombotique</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Orientation selon ECG</strong></td>
+                        <td>Immédiat</td>
+                        <td>Décision thérapeutique</td>
+                        <td>SCA ST+ : activation coro 24/7. SCA ST- : unité cardiologique</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. Transfert/Reperfusion</strong></td>
+                        <td>< 120 min total</td>
+                        <td>Restaurer flux coronarien</td>
+                        <td>Transfert direct coro si possible (bypass urgences)</td>
+                    </tr>
+                </table>
+
+                <div class="danger-box">
+                    <strong>À RETENIR +++</strong><br>
+                    • L'appel au 15 = le geste le plus salvateur<br>
+                    • Le choix du bon circuit est plus vital que le choix du médicament<br>
+                    • En cas de diagnostic de STEMI, patient → directement salle de coro, sans passer par urgences
+                </div>
+
+                <h3>4.2 Traitement médicamenteux initial</h3>
+
+                <div class="highlight">
+                    <strong>Dès la suspicion de SCA = TOUJOURS aspirine</strong><br>
+                    • <strong>250 mg en injection IVD</strong><br>
+                    • Peut importe le type de SCA
+                </div>
+
+                <h3>4.3 Revascularisation</h3>
+
+                <p><strong>Objectif :</strong> Visualiser les artères coronaires et traiter une lésion responsable d'un SCA.</p>
+
+                <p><strong>Angioplastie (PCI thérapeutique) :</strong></p>
+                <ul style="margin-left: 20px; list-style: disc; color: #6B7280;">
+                    <li>Guide métallique jusqu'à la lésion</li>
+                    <li>Ballonnet dilate la sténose</li>
+                    <li>Stent actif (endoprothèse) mis en place</li>
+                    <li>Nécessite DAPT (double anti-agrégation) ≈ 12 mois</li>
+                </ul>
+
+                <div class="learning-box">
+                    <strong>Point important</strong><br>
+                    On ne traite que la lésion coupable en urgence. Les autres lésions seront traitées à froid, secondairement.
+                </div>
+            </div>
+
+            <!-- SECTION 5 -->
+            <div class="section">
+                <h2>5. Évolution et Complications</h2>
+
+                <h3>5.1 Complications précoces</h3>
+
+                <h4>Troubles du rythme ventriculaires</h4>
+                <p><strong>C'est la complication la plus redoutée</strong> à la phase aiguë d'un SCA, principale cause de mortalité précoce (mort subite par fibrillation ventriculaire).</p>
+
+                <table>
+                    <tr>
+                        <th>Trouble</th>
+                        <th>Description</th>
+                        <th>Conduite</th>
+                    </tr>
+                    <tr>
+                        <td><strong>ESV</strong></td>
+                        <td>QRS larges, isolés ou en salves courtes</td>
+                        <td>Surveillance simple, corriger troubles ioniques</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TVNS</strong></td>
+                        <td>3+ ESV ou durée < 30s</td>
+                        <td>Surveiller, corriger facteurs favorisants</td>
+                    </tr>
+                    <tr>
+                        <td><strong>TVS</strong></td>
+                        <td>> 30s ou mal tolérée</td>
+                        <td>Cardioversion électrique immédiate si mal tolérée</td>
+                    </tr>
+                    <tr>
+                        <td><strong>FV</strong></td>
+                        <td>Activité électrique anarchique → ACR</td>
+                        <td>Défibrillation immédiate + MCE</td>
+                    </tr>
+                </table>
+
+                <h4>Fibrillation atriale au cours du SCA</h4>
+                <p>Moins fréquente que les troubles ventriculaires, mais pas rare. Peut provoquer décompensation hémodynamique et accidents thromboemboliques.</p>
+
+                <h4>Troubles de la conduction</h4>
+
+                <p><strong>BAV du SCA inférieur → Souvent nodal</strong></p>
+                <ul style="margin-left: 20px; list-style: disc; color: #6B7280;">
+                    <li>Souvent transitoire</li>
+                    <li>Bien toléré</li>
+                    <li>Sensible à l'atropine</li>
+                    <li>Prise en charge : surveillance + traitement médical</li>
+                </ul>
+
+                <p><strong>BAV du SCA antérieur → Souvent infranodal (hissien)</strong></p>
+                <ul style="margin-left: 20px; list-style: disc; color: #6B7280;">
+                    <li>Mal toléré</li>
+                    <li>Ne répond pas à l'atropine</li>
+                    <li>Souvent définitif</li>
+                    <li>Prise en charge : stimulateur cardiaque provisoire</li>
+                </ul>
+
+                <h3>5.2 Complications hémodynamiques</h3>
+
+                <h4>Classification de Killip (sévérité IVG)</h4>
+                <table>
+                    <tr>
+                        <th>Stade</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td><strong>1</strong></td>
+                        <td>Absence de râles crépitants à l'auscultation pulmonaire</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2</strong></td>
+                        <td>Râles crépitants aux bases ne dépassant pas la moitié des champs pulmonaires</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3</strong></td>
+                        <td>Râles crépitants dépassant la moitié des champs pulmonaires (OAP), galop auscultatoire</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4</strong></td>
+                        <td>Choc cardiogénique</td>
+                    </tr>
+                </table>
+
+                <h4>Œdème aigu pulmonaire cardiogénique</h4>
+                <p><strong>Origines possibles :</strong></p>
+                <ul style="margin-left: 20px; list-style: disc; color: #6B7280;">
+                    <li><strong>Dysfonction systolique aiguë VG +++</strong> : conséquence directe nécrose myocardique</li>
+                    <li><strong>Insuffisance mitrale aiguë ischémique</strong> : rupture du pilier mitral</li>
+                    <li><strong>Troubles du rythme</strong> : tachycardie ou bradycardie aggravant fonction VG</li>
+                    <li><strong>Complication mécanique</strong> : rupture de pilier, CIV</li>
+                </ul>
+
+                <h4>Choc cardiogénique</h4>
+                <div class="danger-box">
+                    <strong>Choc cardiogénique post-SCA = URGENCE ABSOLUE</strong><br>
+                    Principale cause de mortalité hospitalière du SCA ST+
+                </div>
+
+                <p><strong>Causes :</strong></p>
+                <ul style="margin-left: 20px; list-style: disc; color: #6B7280;">
+                    <li>Dysfonction systolique VG étendue (infarctus antérieur massif)</li>
+                    <li>Complication mécanique (rupture pilier, CIV, rupture paroi libre)</li>
+                    <li>Infarctus du VD</li>
+                    <li>Trouble du rythme ou de conduction</li>
+                </ul>
+
+                <h3>5.3 Complications mécaniques (Rares mais souvent fatales)</h3>
+
+                <h4>Rupture de la paroi libre du VG</h4>
+                <p><strong>Conséquences :</strong> Hémopéricarde massif → collapsus → décès rapide</p>
+                <p><strong>Traitement :</strong> Chirurgical immédiat</p>
+
+                <h4>Rupture septale (CIV)</h4>
+                <p><strong>Survient :</strong> 24-48h après IDM</p>
+                <p><strong>Clinique :</strong> Souffle systolique « en rayon de roue », choc cardiogénique</p>
+                <p><strong>Traitement :</strong> Chirurgie urgente</p>
+
+                <h4>Rupture de pilier mitral</h4>
+                <p><strong>Clinique :</strong> IVG brutale, OAP, souffle systolique (parfois peu intense)</p>
+                <p><strong>Traitement :</strong> Chirurgie urgente (suture ou remplacement valvulaire)</p>
+
+                <div class="danger-box">
+                    <strong>À retenir</strong><br>
+                    Toute nouvelle hypotension brutale, OAP inexpliqué, ou souffle systolique chez patient post-IDM doit suspecter complication mécanique → ETT urgent.
+                </div>
+
+                <h3>5.4 Thrombus intra-ventriculaire gauche</h3>
+                <p><strong>Mécanisme :</strong> Stagnation sanguine dans VG dyskinétique (souvent apex) après SCA ST+ antérieur étendu</p>
+                <p><strong>Complication :</strong> Embolisation systémique → AVC, ischémie périphérique</p>
+                <p><strong>Diagnostic :</strong> ETT (première intention) ou IRM cardiaque</p>
+                <p><strong>Traitement :</strong> Anticoagulation curative immédiate</p>
+            </div>
+
+            <!-- SECTION 6 -->
+            <div class="section">
+                <h2>6. Prise en charge au long cours</h2>
+
+                <h3>Hospitalisation</h3>
+                <ul style="margin-left: 20px; list-style: disc; color: #6B7280;">
+                    <li><strong>SCA ST+ :</strong> 5 à 7 jours</li>
+                    <li><strong>SCA ST− :</strong> 3 à 5 jours</li>
+                </ul>
+
+                <h3>MÉMO : B-A-S-I-C-L-E-N-A-R-N-I-A</h3>
+
+                <table>
+                    <tr>
+                        <th>Élément</th>
+                        <th>Rationnel thérapeutique</th>
+                    </tr>
+                    <tr>
+                        <td><strong>B - Bêtabloquants</strong></td>
+                        <td>Indiqués si FEVG ≤ 40%, réduisent mortalité et préviennent troubles rythme</td>
+                    </tr>
+                    <tr>
+                        <td><strong>A - Antiagrégants</strong></td>
+                        <td>Aspirine à vie + P2Y12 (ticagrelor/clopidogrel) 12 mois</td>
+                    </tr>
+                    <tr>
+                        <td><strong>S - Statines</strong></td>
+                        <td>Forte dose d'emblée. Objectif LDL < 0.55 g/L</td>
+                    </tr>
+                    <tr>
+                        <td><strong>I - IEC/ARA2</strong></td>
+                        <td>Indiqués si FEVG ≤ 40%, diabète, ou IRC</td>
+                    </tr>
+                    <tr>
+                        <td><strong>C - Contrôle FDR</strong></td>
+                        <td>Sevrage tabagique, régime méditerranéen, activité physique</td>
+                    </tr>
+                    <tr>
+                        <td><strong>L - Lasilix</strong></td>
+                        <td>Si signes insuffisance cardiaque congestive</td>
+                    </tr>
+                    <tr>
+                        <td><strong>E - Éplérénone</strong></td>
+                        <td>Si FEVG ≤ 40% + IC ou diabète</td>
+                    </tr>
+                    <tr>
+                        <td><strong>N - Nitrospray</strong></td>
+                        <td>Traitement symptomatique si récidive angineuse</td>
+                    </tr>
+                    <tr>
+                        <td><strong>A - Arrêt travail</strong></td>
+                        <td>2-4 semaines selon profession et récupération</td>
+                    </tr>
+                    <tr>
+                        <td><strong>R - Réadaptation cardiaque</strong></td>
+                        <td>Recommandée chez tous patients post-SCA</td>
+                    </tr>
+                    <tr>
+                        <td><strong>N - Nicopatch</strong></td>
+                        <td>Sevrage tabagique encadré</td>
+                    </tr>
+                    <tr>
+                        <td><strong>I - IPP</strong></td>
+                        <td>Si risque hémorragique élevé</td>
+                    </tr>
+                    <tr>
+                        <td><strong>A - ALD</strong></td>
+                        <td>Systématique après SCA</td>
+                    </tr>
+                </table>
+
+                <h3>Suivi médical post-hospitalisation</h3>
+                <p>Suivi conjoint cardiologue + médecin traitant, visant à :</p>
+                <ul style="margin-left: 20px; list-style: disc; color: #6B7280;">
+                    <li>Contrôler les FDR (TA, diabète, LDL, tabac, activité physique)</li>
+                    <li>Vérifier tolérance et observance des traitements</li>
+                    <li>Surveiller fonction VG (échocardiographie de contrôle)</li>
+                    <li>Rechercher localisations athéromateuses associées</li>
+                    <li>Prévenir récidive ischémique</li>
+                </ul>
+            </div>
+
+            <!-- POINTS CLÉS FINAUX -->
+            <div class="section">
+                <h2>Points clés à retenir</h2>
+
+                <div class="key-points">
+                    <ul>
+                        <li>Appel au 15 immédiatement = geste salvateur n°1</li>
+                        <li>ECG rapidement (< 10 min) = diagnostic initial</li>
+                        <li>SCA ST+ = urgence coronarienne < 120 min</li>
+                        <li>Troponine + ECG = diagnostic d'IM confirmé</li>
+                        <li>Revascularisation précoce = réduction de la mortalité</li>
+                        <li>Traitement médical de fond = prévention secondaire essentielle</li>
+                        <li>Plaques vulnérables = cœur lipidique important + chape fibreuse fine</li>
+                        <li>Présentations atypiques = plus fréquentes chez âgés, femmes, diabétiques</li>
+                        <li>Troubles du rythme = complication précoce majeure</li>
+                        <li>Complications mécaniques = diagnostic rapide par ETT indispensable</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SECTION TÉLÉCHARGEMENT -->
+            <div class="download-section">
+                <button class="btn btn-primary" onclick="downloadPDF()">📥 Télécharger la fiche PDF</button>
+                <button class="btn btn-secondary" onclick="printCourse()">🖨️ Imprimer le cours</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Vérifier connexion
+        if (!localStorage.getItem('isLoggedIn')) {
+            window.location.href = 'login.html';
+        }
+
+        // Fonctions vidéo (simulation)
+        function playVideo() {
+            alert('▶️ Lecture vidéo (simulation)');
+        }
+
+        function pauseVideo() {
+            alert('⏸️ Vidéo mise en pause (simulation)');
+        }
+
+        function toggleFullscreen() {
+            alert('🖥️ Mode plein écran (simulation)');
+        }
+
+        function downloadPDF() {
+            alert('📥 Téléchargement de la fiche PDF en cours...\n(En production, cela génère un vrai PDF)');
+        }
+
+        function printCourse() {
+            window.print();
+        }
+
+        // Marquer comme vu
+        let stats = JSON.parse(localStorage.getItem('userStats') || '{"videosWatched": 0, "qcmCompleted": 0, "successRate": 0, "streak": 0}');
+        stats.videosWatched = (stats.videosWatched || 0) + 1;
+        localStorage.setItem('userStats', JSON.stringify(stats));
+    </script>
+</body>
+</html>
