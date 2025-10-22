@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - MedFormation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #F9FAFB;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            color: #2563EB;
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #F9FAFB;
+            border: 2px solid #E5E7EB;
+            border-radius: 10px;
+            padding: 8px 16px;
+            min-width: 300px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #2563EB;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            display: none;
+            overflow: hidden;
+        }
+
+        .dropdown.active {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+            color: #374151;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-item:hover {
+            background: #F9FAFB;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 73px;
+            bottom: 0;
+            width: 260px;
+            background: white;
+            border-right: 1px solid #E5E7EB;
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #6B7280;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: #F9FAFB;
+            color: #2563EB;
+        }
+
+        .nav-item.active {
+            background: #EFF6FF;
+            color: #2563EB;
+            border-right: 3px solid #2563EB;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 32px;
+            min-height: calc(100vh - 73px);
+        }
+
+        .welcome-section {
+            background: linear-gradient(135deg, #2563EB 0%, #1d4ed8 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .welcome-section h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .welcome-section p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #E5E7EB;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+
+        .stat-icon.blue {
+            background: #EFF6FF;
+            color: #2563EB;
+        }
+
+        .stat-icon.green {
+            background: #ECFDF5;
+            color: #10B981;
+        }
+
+        .stat-icon.orange {
+            background: #FEF3C7;
+            color: #F59E0B;
+        }
+
+        .stat-icon.purple {
+            background: #F3E8FF;
+            color: #A855F7;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6B7280;
+        }
+
+        /* Quick Access Section */
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 20px;
+        }
+
+        .quick-access-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .access-card {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 16px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .access-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .access-card h3 {
+            font-size: 18px;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .access-card p {
+            font-size: 14px;
+            color: #6B7280;
+            margin-bottom: 16px;
+        }
+
+        .access-card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        /* Upgrade Banner */
+        .upgrade-banner {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .upgrade-banner.hidden {
+            display: none;
+        }
+
+        .upgrade-content h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .upgrade-content p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .btn-upgrade {
+            background: white;
+            color: #F59E0B;
+            padding: 12px 24px;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-upgrade:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Recent Activity */
+        .activity-list {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        /* Mobile Bottom Navigation */
+        .bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #E5E7EB;
+            padding: 8px 0;
+            z-index: 100;
+        }
+
+        .bottom-nav-items {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            color: #6B7280;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .bottom-nav-item.active {
+            color: #2563EB;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+                margin-bottom: 70px;
+            }
+
+            .search-bar {
+                display: none;
+            }
+
+            .bottom-nav {
+                display: block;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .welcome-section h1 {
+                font-size: 24px;
+            }
+
+            .upgrade-banner {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <a href="dashboard.html" class="logo">🏥 MedFormation</a>
+        <div class="header-right">
+            <div class="search-bar">
+                <span>🔍</span>
+                <input type="text" placeholder="Rechercher des cours, QCM, ECOS...">
+            </div>
+            <div class="user-menu" id="userMenu">
+                <div class="user-avatar" id="userAvatar">SM</div>
+                <div class="dropdown" id="dropdown">
+                    <a href="account.html" class="dropdown-item">👤 Mon compte</a>
+                    <a href="progress.html" class="dropdown-item">📊 Ma progression</a>
+                    <a href="#" class="dropdown-item" id="logoutBtn">🚪 Déconnexion</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <a href="dashboard.html" class="nav-item active">
+            <span class="nav-icon">🏠</span>
+            Dashboard
+        </a>
+        <a href="courses.html" class="nav-item">
+            <span class="nav-icon">📚</span>
+            Cours
+        </a>
+        <a href="qcm.html" class="nav-item">
+            <span class="nav-icon">✏️</span>
+            QCM
+        </a>
+        <a href="ecos.html" class="nav-item">
+            <span class="nav-icon">🎯</span>
+            ECOS
+        </a>
+        <a href="progress.html" class="nav-item">
+            <span class="nav-icon">📊</span>
+            Progression
+        </a>
+        <a href="account.html" class="nav-item">
+            <span class="nav-icon">⚙️</span>
+            Mon Compte
+        </a>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1 id="welcomeText">Bonjour Sophie ! 👋</h1>
+            <p>Prêt à poursuivre votre formation médicale aujourd'hui ?</p>
+        </div>
+
+        <!-- Upgrade Banner (only for free users) -->
+        <div class="upgrade-banner" id="upgradeBanner">
+            <div class="upgrade-content">
+                <h3>🚀 Passez à Premium</h3>
+                <p>Accédez à tous les cours, QCM illimités et fonctionnalités avancées</p>
+            </div>
+            <a href="pricing.html" class="btn-upgrade">Découvrir Premium</a>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">📹</div>
+                <div class="stat-value" id="videosWatched">0</div>
+                <div class="stat-label">Vidéos visionnées</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">✅</div>
+                <div class="stat-value" id="qcmCompleted">0</div>
+                <div class="stat-label">QCM complétés</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon orange">📈</div>
+                <div class="stat-value" id="successRate">0%</div>
+                <div class="stat-label">Taux de réussite</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon purple">🔥</div>
+                <div class="stat-value" id="streak">0</div>
+                <div class="stat-label">Jours consécutifs</div>
+            </div>
+        </div>
+
+        <!-- Quick Access -->
+        <h2 class="section-title">Accès rapide</h2>
+        <div class="quick-access-grid">
+            <a href="courses.html" class="access-card">
+                <h3>📚 Cours vidéo</h3>
+                <p>Accédez à la bibliothèque complète de cours par spécialité</p>
+                <div class="access-card-footer">
+                    <span>15 vidéos disponibles</span>
+                    <span>→</span>
+                </div>
+            </a>
+            <a href="qcm.html" class="access-card">
+                <h3>✏️ QCM d'entraînement</h3>
+                <p>Testez vos connaissances avec des questions ciblées</p>
+                <div class="access-card-footer">
+                    <span>50 questions</span>
+                    <span>→</span>
+                </div>
+            </a>
+            <a href="ecos.html" class="access-card">
+                <h3>🎯 Fiches ECOS</h3>
+                <p>Préparez l'épreuve orale avec nos stations types</p>
+                <div class="access-card-footer">
+                    <span>20 fiches</span>
+                    <span>→</span>
+                </div>
+            </a>
+            <a href="progress.html" class="access-card">
+                <h3>📊 Ma progression</h3>
+                <p>Suivez votre évolution et identifiez vos points faibles</p>
+                <div class="access-card-footer">
+                    <span>Voir les stats</span>
+                    <span>→</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Recent Activity -->
+        <h2 class="section-title">Activité récente</h2>
+        <div class="activity-list" id="activityList">
+            <div class="activity-item">
+                <div class="activity-icon blue">📹</div>
+                <div class="activity-content">
+                    <div class="activity-title">Bienvenue sur MedFormation !</div>
+                    <div class="activity-time">Commencez par explorer les cours gratuits</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation (Mobile) -->
+    <nav class="bottom-nav">
+        <div class="bottom-nav-items">
+            <a href="dashboard.html" class="bottom-nav-item active">
+                <span>🏠</span>
+                Dashboard
+            </a>
+            <a href="courses.html" class="bottom-nav-item">
+                <span>📚</span>
+                Cours
+            </a>
+            <a href="qcm.html" class="bottom-nav-item">
+                <span>✏️</span>
+                QCM
+            </a>
+            <a href="ecos.html" class="bottom-nav-item">
+                <span>🎯</span>
+                ECOS
+            </a>
+            <a href="account.html" class="bottom-nav-item">
+                <span>⚙️</span>
+                Compte
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        // Check if user is logged in
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        if (!isLoggedIn) {
+            window.location.href = 'login.html';
+        }
+
+        // Get user data
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+        // Update welcome message
+        if (currentUser.firstName) {
+            document.getElementById('welcomeText').textContent = `Bonjour ${currentUser.firstName} ! 👋`;
+        }
+
+        // Update user avatar
+        if (currentUser.firstName && currentUser.lastName) {
+            const initials = currentUser.firstName.charAt(0) + currentUser.lastName.charAt(0);
+            document.getElementById('userAvatar').textContent = initials.toUpperCase();
+        }
+
+        // Show/hide upgrade banner based on subscription
+        if (currentUser.subscription_status === 'active') {
+            document.getElementById('upgradeBanner').classList.add('hidden');
+        }
+
+        // User menu dropdown
+        document.getElementById('userMenu').addEventListener('click', function() {
+            document.getElementById('dropdown').classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!document.getElementById('userMenu').contains(e.target)) {
+                document.getElementById('dropdown').classList.remove('active');
+            }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('rememberMe');
+            window.location.href = 'index.html';
+        });
+
+        // Load stats from localStorage
+        const stats = JSON.parse(localStorage.getItem('userStats') || '{"videosWatched": 0, "qcmCompleted": 0, "successRate": 0, "streak": 0}');
+        document.getElementById('videosWatched').textContent = stats.videosWatched;
+        document.getElementById('qcmCompleted').textContent = stats.qcmCompleted;
+        document.getElementById('successRate').textContent = stats.successRate + '%';
+        document.getElementById('streak').textContent = stats.streak;
+    </script>
+</body>
+</html>
