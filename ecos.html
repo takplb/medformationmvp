@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiches ECOS - MedFormation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #F9FAFB;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            color: #2563EB;
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #2563EB;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 73px;
+            bottom: 0;
+            width: 260px;
+            background: white;
+            border-right: 1px solid #E5E7EB;
+            padding: 24px 0;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #6B7280;
+            text-decoration: none;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: #F9FAFB;
+            color: #2563EB;
+        }
+
+        .nav-item.active {
+            background: #EFF6FF;
+            color: #2563EB;
+            border-right: 3px solid #2563EB;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            padding: 32px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #6B7280;
+            font-size: 16px;
+        }
+
+        .filters {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid #E5E7EB;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+
+        .filter-group select {
+            padding: 8px 12px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .filter-group input {
+            padding: 8px 12px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 14px;
+            min-width: 200px;
+        }
+
+        .ecos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .ecos-card {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .ecos-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .ecos-header {
+            padding: 24px;
+            background: linear-gradient(135deg, #2563EB 0%, #1d4ed8 100%);
+            color: white;
+            position: relative;
+        }
+
+        .ecos-header.free {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        }
+
+        .premium-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #EF4444;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .free-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: white;
+            color: #10B981;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .ecos-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .ecos-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .ecos-meta {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .ecos-meta span {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 10px;
+            border-radius: 16px;
+        }
+
+        .ecos-content {
+            padding: 20px 24px;
+        }
+
+        .ecos-preview {
+            font-size: 14px;
+            color: #6B7280;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .ecos-objectives {
+            background: #F9FAFB;
+            border-left: 4px solid #2563EB;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+
+        .ecos-objectives h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 6px;
+        }
+
+        .ecos-objectives p {
+            font-size: 13px;
+            color: #6B7280;
+            line-height: 1.5;
+        }
+
+        .ecos-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .difficulty {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .difficulty.easy {
+            color: #10B981;
+        }
+
+        .difficulty.medium {
+            color: #F59E0B;
+        }
+
+        .difficulty.hard {
+            color: #EF4444;
+        }
+
+        .btn-view {
+            background: #2563EB;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-view:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 64px 32px;
+        }
+
+        .empty-state h2 {
+            font-size: 24px;
+            color: #111827;
+            margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            color: #6B7280;
+            font-size: 16px;
+        }
+
+        .stats-bar {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid #E5E7EB;
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.blue {
+            background: #EFF6FF;
+            color: #2563EB;
+        }
+
+        .stat-icon.green {
+            background: #ECFDF5;
+            color: #10B981;
+        }
+
+        .stat-icon.purple {
+            background: #F3E8FF;
+            color: #A855F7;
+        }
+
+        .stat-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #6B7280;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+            }
+
+            .ecos-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="dashboard.html" class="logo">🏥 MedFormation</a>
+        <div class="user-avatar" id="userAvatar">SM</div>
+    </header>
+
+    <aside class="sidebar">
+        <a href="dashboard.html" class="nav-item">
+            <span>🏠</span> Dashboard
+        </a>
+        <a href="courses.html" class="nav-item">
+            <span>📚</span> Cours
+        </a>
+        <a href="qcm.html" class="nav-item">
+            <span>✏️</span> QCM
+        </a>
+        <a href="ecos.html" class="nav-item active">
+            <span>🎯</span> ECOS
+        </a>
+        <a href="progress.html" class="nav-item">
+            <span>📊</span> Progression
+        </a>
+        <a href="account.html" class="nav-item">
+            <span>⚙️</span> Mon Compte
+        </a>
+    </aside>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>🎯 Fiches ECOS</h1>
+            <p>Préparez l'épreuve orale avec nos stations types rédigées par des internes et médecins</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-icon blue">📋</div>
+                <div class="stat-details">
+                    <div class="stat-value" id="totalEcos">20</div>
+                    <div class="stat-label">Stations disponibles</div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon green">✅</div>
+                <div class="stat-details">
+                    <div class="stat-value" id="studiedEcos">0</div>
+                    <div class="stat-label">Fiches étudiées</div>
+                </div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-icon purple">🎓</div>
+                <div class="stat-details">
+                    <div class="stat-value">6</div>
+                    <div class="stat-label">Compétences clés</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtres -->
+        <div class="filters">
+            <div class="filter-group">
+                <label for="specialtyFilter">Spécialité :</label>
+                <select id="specialtyFilter">
+                    <option value="">Toutes les spécialités</option>
+                    <option value="Cardiologie">Cardiologie</option>
+                    <option value="Pneumologie">Pneumologie</option>
+                    <option value="Gastro-entérologie">Gastro-entérologie</option>
+                    <option value="Neurologie">Neurologie</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="competencyFilter">Compétence :</label>
+                <select id="competencyFilter">
+                    <option value="">Toutes les compétences</option>
+                    <option value="Communication">Communication</option>
+                    <option value="Examen clinique">Examen clinique</option>
+                    <option value="Raisonnement">Raisonnement clinique</option>
+                    <option value="Geste technique">Geste technique</option>
+                    <option value="Urgence">Urgence vitale</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="difficultyFilter">Difficulté :</label>
+                <select id="difficultyFilter">
+                    <option value="">Toutes les difficultés</option>
+                    <option value="Facile">Facile</option>
+                    <option value="Moyen">Moyen</option>
+                    <option value="Difficile">Difficile</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <input type="text" id="searchInput" placeholder="Rechercher une fiche...">
+            </div>
+        </div>
+
+        <!-- Grille de fiches ECOS -->
+        <div class="ecos-grid" id="ecosGrid">
+            <!-- Les fiches ECOS seront insérées ici par JavaScript -->
+        </div>
+    </main>
+
+    <script>
+        // Check login
+        if (!localStorage.getItem('isLoggedIn')) {
+            window.location.href = 'login.html';
+        }
+
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        if (currentUser.firstName && currentUser.lastName) {
+            const initials = currentUser.firstName.charAt(0) + currentUser.lastName.charAt(0);
+            document.getElementById('userAvatar').textContent = initials.toUpperCase();
+        }
+
+        // Base de données des fiches ECOS
+        const ecosDatabase = [
+            {
+                id: 1,
+                title: "Consultation d'annonce - Infarctus du myocarde",
+                specialty: "Cardiologie",
+                competency: "Communication",
+                difficulty: "Moyen",
+                icon: "💬",
+                is_free: true,
+                context: "Patient de 58 ans hospitalisé pour IDM, vous devez lui annoncer le diagnostic",
+                objectives: "Annoncer un diagnostic grave, évaluer la compréhension du patient, proposer un suivi adapté",
+                preview: "Station de communication centrée sur l'annonce d'un diagnostic d'infarctus du myocarde à un patient hospitalisé. Cette consultation nécessite empathie, clarté et structuration du discours médical."
+            },
+            {
+                id: 2,
+                title: "Examen cardiovasculaire complet",
+                specialty: "Cardiologie",
+                competency: "Examen clinique",
+                difficulty: "Moyen",
+                icon: "🩺",
+                is_free: true,
+                context: "Patient de 65 ans consultant pour dyspnée d'effort",
+                objectives: "Réaliser un examen cardiovasculaire systématique et complet, identifier les signes d'insuffisance cardiaque",
+                preview: "Examen clinique cardiovasculaire méthodique avec recherche des signes d'insuffisance cardiaque gauche et droite, auscultation des 4 foyers, palpation des pouls périphériques."
+            },
+            {
+                id: 3,
+                title: "Interprétation d'ECG en urgence - SCA",
+                specialty: "Cardiologie",
+                competency: "Raisonnement",
+                difficulty: "Difficile",
+                icon: "📈",
+                is_free: false,
+                context: "Patient de 52 ans aux urgences pour douleur thoracique",
+                objectives: "Interpréter un ECG montrant un SCA ST+, proposer la prise en charge immédiate",
+                preview: "Station d'urgence nécessitant l'interprétation rapide d'un ECG de SCA ST+ et la mise en place d'une stratégie thérapeutique adaptée en moins de 10 minutes."
+            },
+            {
+                id: 4,
+                title: "Pose de voie veineuse périphérique",
+                specialty: "Cardiologie",
+                competency: "Geste technique",
+                difficulty: "Facile",
+                icon: "💉",
+                is_free: true,
+                context: "Patient nécessitant une VVP pour traitement intraveineux",
+                objectives: "Poser une voie veineuse périphérique en respectant les règles d'asepsie et de sécurité",
+                preview: "Geste technique de base indispensable. Importance de l'asepsie, du choix du site de ponction et de la sécurisation de la voie."
+            },
+            {
+                id: 5,
+                title: "Prise en charge de l'arrêt cardio-respiratoire",
+                specialty: "Cardiologie",
+                competency: "Urgence",
+                difficulty: "Difficile",
+                icon: "🚨",
+                is_free: false,
+                context: "Patient en ACR devant vous, témoin présent",
+                objectives: "Réaliser une RCP de qualité, organiser les secours, utiliser le défibrillateur",
+                preview: "Station d'urgence vitale absolue. Évaluation de la qualité du massage cardiaque, de l'organisation de l'équipe et de l'utilisation du DEA."
+            },
+            {
+                id: 6,
+                title: "Annonce d'une mauvaise nouvelle - Cancer",
+                specialty: "Pneumologie",
+                competency: "Communication",
+                difficulty: "Difficile",
+                icon: "💔",
+                is_free: false,
+                context: "Patient de 60 ans fumeur, scanner thoracique évocateur de cancer pulmonaire",
+                objectives: "Annoncer une suspicion de cancer, accompagner émotionnellement le patient",
+                preview: "Station de communication difficile nécessitant empathie, disponibilité et protocole d'annonce structuré selon recommandations."
+            },
+            {
+                id: 7,
+                title: "Examen pulmonaire systématique",
+                specialty: "Pneumologie",
+                competency: "Examen clinique",
+                difficulty: "Facile",
+                icon: "🫁",
+                is_free: true,
+                context: "Patient consultant pour toux et dyspnée",
+                objectives: "Réaliser un examen pulmonaire complet et systématique",
+                preview: "Inspection, palpation, percussion et auscultation pulmonaire. Recherche de signes de détresse respiratoire et d'épanchement pleural."
+            },
+            {
+                id: 8,
+                title: "Prise en charge de la crise d'asthme aiguë",
+                specialty: "Pneumologie",
+                competency: "Urgence",
+                difficulty: "Moyen",
+                icon: "😮‍💨",
+                is_free: false,
+                context: "Patiente de 25 ans en crise d'asthme aux urgences",
+                objectives: "Évaluer la gravité, mettre en place le traitement d'urgence",
+                preview: "Station d'urgence respiratoire. Importance de l'évaluation de la gravité et de l'administration précoce des bronchodilatateurs et corticoïdes."
+            },
+            {
+                id: 9,
+                title: "Consultation de sevrage tabagique",
+                specialty: "Pneumologie",
+                competency: "Communication",
+                difficulty: "Moyen",
+                icon: "🚭",
+                is_free: true,
+                context: "Patient fumeur 1 paquet/jour depuis 20 ans souhaitant arrêter",
+                objectives: "Évaluer la motivation, proposer une stratégie de sevrage personnalisée",
+                preview: "Consultation de prévention primordiale. Évaluation de la dépendance (test de Fagerström), conseils comportementaux et thérapeutiques."
+            },
+            {
+                id: 10,
+                title: "Diagnostic étiologique d'une douleur abdominale",
+                specialty: "Gastro-entérologie",
+                competency: "Raisonnement",
+                difficulty: "Moyen",
+                icon: "🤔",
+                is_free: false,
+                context: "Patient de 45 ans avec douleur abdominale aiguë",
+                objectives: "Interrogatoire ciblé, examen abdominal, hypothèses diagnostiques",
+                preview: "Station de raisonnement clinique complexe nécessitant un interrogatoire structuré et un examen clinique minutieux pour orienter vers la bonne étiologie."
+            },
+            {
+                id: 11,
+                title: "Toucher rectal - Technique et indications",
+                specialty: "Gastro-entérologie",
+                competency: "Geste technique",
+                difficulty: "Moyen",
+                icon: "🔬",
+                is_free: false,
+                context: "Patient de 70 ans avec rectorragies récentes",
+                objectives: "Réaliser un toucher rectal en expliquant la technique et en recherchant les anomalies",
+                preview: "Geste technique essentiel. Importance de l'explication au patient, du confort et de la systématisation de l'examen."
+            },
+            {
+                id: 12,
+                title: "Prise en charge d'une hémorragie digestive haute",
+                specialty: "Gastro-entérologie",
+                competency: "Urgence",
+                difficulty: "Difficile",
+                icon: "🩸",
+                is_free: false,
+                context: "Patient vomissant du sang aux urgences",
+                objectives: "Évaluer la gravité, stabiliser le patient, organiser l'endoscopie",
+                preview: "Urgence digestive majeure. Évaluation hémodynamique, remplissage vasculaire, transfusion si nécessaire et organisation de l'endoscopie en urgence."
+            },
+            {
+                id: 13,
+                title: "Examen neurologique des membres inférieurs",
+                specialty: "Neurologie",
+                competency: "Examen clinique",
+                difficulty: "Moyen",
+                icon: "🦵",
+                is_free: false,
+                context: "Patient consultant pour faiblesse des membres inférieurs",
+                objectives: "Réaliser un examen neurologique systématique des MI",
+                preview: "Examen neurologique complet : testing musculaire, reflexes ostéotendineux, sensibilité, coordination et marche."
+            },
+            {
+                id: 14,
+                title: "Diagnostic d'AVC en urgence",
+                specialty: "Neurologie",
+                competency: "Urgence",
+                difficulty: "Difficile",
+                icon: "🧠",
+                is_free: false,
+                context: "Patient de 68 ans avec déficit hémicorporel brutal",
+                objectives: "Suspecter un AVC, évaluer le score NIHSS, organiser l'imagerie et la thrombolyse",
+                preview: "Urgence neuro-vasculaire absolue. Chaque minute compte ('Time is brain'). Évaluation rapide, imagerie cérébrale et décision de thrombolyse."
+            },
+            {
+                id: 15,
+                title: "Annonce de diagnostic de SEP",
+                specialty: "Neurologie",
+                competency: "Communication",
+                difficulty: "Difficile",
+                icon: "🗣️",
+                is_free: false,
+                context: "Patiente de 28 ans, IRM confirmant une SEP",
+                objectives: "Annoncer le diagnostic de maladie chronique, expliquer la prise en charge",
+                preview: "Consultation d'annonce complexe chez sujet jeune. Importance de l'accompagnement psychologique et de l'explication de la chronicité de la maladie."
+            },
+            {
+                id: 16,
+                title: "Réalisation d'une ponction lombaire",
+                specialty: "Neurologie",
+                competency: "Geste technique",
+                difficulty: "Difficile",
+                icon: "💉",
+                is_free: false,
+                context: "Patient avec suspicion de méningite nécessitant une PL",
+                objectives: "Réaliser une ponction lombaire en respectant les règles d'asepsie et de sécurité",
+                preview: "Geste technique invasif à haut risque. Nécessite une parfaite maîtrise de l'anatomie, de l'asepsie et du recueil du LCR."
+            },
+            {
+                id: 17,
+                title: "Éducation thérapeutique - Diabète de type 2",
+                specialty: "Endocrinologie",
+                competency: "Communication",
+                difficulty: "Moyen",
+                icon: "💊",
+                is_free: false,
+                context: "Patient diabétique nouvellement diagnostiqué",
+                objectives: "Expliquer la maladie, les règles hygiéno-diététiques et le traitement",
+                preview: "Consultation d'éducation thérapeutique essentielle. Importance de la compréhension du patient et de son adhésion au traitement."
+            },
+            {
+                id: 18,
+                title: "Entretien motivationnel - Obésité",
+                specialty: "Endocrinologie",
+                competency: "Communication",
+                difficulty: "Moyen",
+                icon: "🏃",
+                is_free: false,
+                context: "Patient obèse (IMC 35) souhaitant perdre du poids",
+                objectives: "Évaluer la motivation, fixer des objectifs réalistes, proposer un suivi",
+                preview: "Consultation centrée sur le patient utilisant les techniques d'entretien motivationnel pour favoriser le changement de comportement."
+            },
+            {
+                id: 19,
+                title: "Examen de la thyroïde",
+                specialty: "Endocrinologie",
+                competency: "Examen clinique",
+                difficulty: "Facile",
+                icon: "👔",
+                is_free: true,
+                context: "Patiente avec suspicion d'hyperthyroïdie",
+                objectives: "Réaliser un examen thyroïdien complet",
+                preview: "Inspection et palpation de la thyroïde, recherche de signes d'hyper ou hypothyroïdie, auscultation du goitre."
+            },
+            {
+                id: 20,
+                title: "Prise en charge du coma diabétique",
+                specialty: "Endocrinologie",
+                competency: "Urgence",
+                difficulty: "Difficile",
+                icon: "⚡",
+                is_free: false,
+                context: "Patient diabétique en coma aux urgences",
+                objectives: "Diagnostic étiologique (acido-cétose vs hyperosmolaire), réanimation initiale",
+                preview: "Urgence métabolique grave nécessitant une prise en charge rapide et codifiée. Importance de l'hydratation et de l'insulinothérapie."
+            }
+        ];
+
+        // Fonction pour afficher les fiches ECOS
+        function displayECOS(ecosList = ecosDatabase) {
+            const ecosGrid = document.getElementById('ecosGrid');
+            ecosGrid.innerHTML = '';
+
+            if (ecosList.length === 0) {
+                ecosGrid.innerHTML = `
+                    <div style="grid-column: 1/-1;">
+                        <div class="empty-state">
+                            <h2>Aucune fiche trouvée</h2>
+                            <p>Essayez de modifier vos filtres de recherche</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            ecosList.forEach(ecos => {
+                const isAccessible = ecos.is_free || currentUser.subscription_status === 'active';
+                const lockIcon = !isAccessible ? '🔒 ' : '';
+                const badgeClass = ecos.is_free ? 'free-badge' : 'premium-badge';
+                const badgeText = ecos.is_free ? '📖 Gratuit' : '⭐ Premium';
+                const difficultyClass = ecos.difficulty === 'Facile' ? 'easy' : ecos.difficulty === 'Moyen' ? 'medium' : 'hard';
+
+                const ecosCard = document.createElement('div');
+                ecosCard.className = 'ecos-card';
+                ecosCard.onclick = () => isAccessible ? openECOS(ecos.id) : showUpgradeMessage();
+                ecosCard.innerHTML = `
+                    <div class="ecos-header ${ecos.is_free ? 'free' : ''}">
+                        <span class="${badgeClass}">${badgeText}</span>
+                        <div class="ecos-icon">${ecos.icon}</div>
+                        <div class="ecos-title">${lockIcon}${ecos.title}</div>
+                        <div class="ecos-meta">
+                            <span>${ecos.specialty}</span>
+                            <span>${ecos.competency}</span>
+                        </div>
+                    </div>
+                    <div class="ecos-content">
+                        <div class="ecos-preview">${ecos.preview}</div>
+                        <div class="ecos-objectives">
+                            <h4>🎯 Objectifs</h4>
+                            <p>${ecos.objectives}</p>
+                        </div>
+                    </div>
+                    <div class="ecos-footer">
+                        <span class="difficulty ${difficultyClass}">${ecos.difficulty}</span>
+                        <button class="btn-view">Voir la fiche →</button>
+                    </div>
+                `;
+                ecosGrid.appendChild(ecosCard);
+            });
+        }
+
+        // Fonction pour ouvrir la fiche ECOS détaillée
+        function openECOS(id) {
+            window.location.href = 'ecos-detail.html?id=' + id;
+        }
+
+        // Fonction pour afficher message upgrade
+        function showUpgradeMessage() {
+            alert('Cette fiche ECOS est réservée aux utilisateurs premium.\nAccédez à la page Tarifs pour vous abonner.');
+        }
+
+        // Filtres et recherche
+        document.getElementById('specialtyFilter').addEventListener('change', applyFilters);
+        document.getElementById('competencyFilter').addEventListener('change', applyFilters);
+        document.getElementById('difficultyFilter').addEventListener('change', applyFilters);
+        document.getElementById('searchInput').addEventListener('keyup', applyFilters);
+
+        function applyFilters() {
+            const specialty = document.getElementById('specialtyFilter').value;
+            const competency = document.getElementById('competencyFilter').value;
+            const difficulty = document.getElementById('difficultyFilter').value;
+            const search = document.getElementById('searchInput').value.toLowerCase();
+
+            const filtered = ecosDatabase.filter(ecos => {
+                const matchSpecialty = !specialty || ecos.specialty === specialty;
+                const matchCompetency = !competency || ecos.competency === competency;
+                const matchDifficulty = !difficulty || ecos.difficulty === difficulty;
+                const matchSearch = !search || 
+                    ecos.title.toLowerCase().includes(search) || 
+                    ecos.preview.toLowerCase().includes(search) ||
+                    ecos.context.toLowerCase().includes(search);
+                
+                return matchSpecialty && matchCompetency && matchDifficulty && matchSearch;
+            });
+
+            displayECOS(filtered);
+        }
+
+        // Update stats
+        const studiedEcos = JSON.parse(localStorage.getItem('studiedEcos') || '[]');
+        document.getElementById('studiedEcos').textContent = studiedEcos.length;
+
+        // Affichage initial
+        displayECOS();
+    </script>
+</body>
+</html>
