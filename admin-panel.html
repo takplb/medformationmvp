@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel V3 - MedFormation</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #F9FAFB;
+            color: #374151;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2563EB 0%, #1d4ed8 100%);
+            color: white;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid #E5E7EB;
+            overflow-x: auto;
+            padding-bottom: 12px;
+        }
+
+        .tab-btn {
+            padding: 10px 16px;
+            background: transparent;
+            border: none;
+            color: #6B7280;
+            cursor: pointer;
+            font-weight: 600;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+
+        .tab-btn.active {
+            color: #2563EB;
+            border-bottom-color: #2563EB;
+        }
+
+        .tab-btn:hover {
+            color: #2563EB;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #E5E7EB;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #111827;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #2563EB;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-secondary {
+            background: #F3F4F6;
+            color: #374151;
+            border: 1px solid #E5E7EB;
+        }
+
+        .btn-secondary:hover {
+            background: #E5E7EB;
+        }
+
+        .btn-danger {
+            background: #EF4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #DC2626;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: #ECFDF5;
+            color: #065F46;
+            border: 1px solid #A7F3D0;
+        }
+
+        .alert-error {
+            background: #FEF2F2;
+            color: #991B1B;
+            border: 1px solid #FECACA;
+        }
+
+        .tree-item {
+            padding: 12px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 6px;
+            border-left: 3px solid #2563EB;
+            font-size: 14px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6B7280;
+        }
+
+        .spinner {
+            border: 3px solid #E5E7EB;
+            border-top-color: #2563EB;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .accordion {
+            background: #F9FAFB;
+            border: 1px solid #E5E7EB;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            cursor: pointer;
+            user-select: none;
+            font-weight: 600;
+            color: #374151;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .accordion-header:hover {
+            background: #F9FAFB;
+        }
+
+        .accordion-toggle {
+            transform: rotate(0deg);
+            transition: transform 0.3s;
+        }
+
+        .accordion.open .accordion-toggle {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            display: none;
+            padding: 16px;
+            border-top: 1px solid #E5E7EB;
+            background: #FAFAFA;
+        }
+
+        .accordion.open .accordion-content {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #E5E7EB;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2563EB;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6B7280;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .tabs {
+                gap: 4px;
+            }
+
+            .tab-btn {
+                font-size: 11px;
+                padding: 8px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🛠️ Admin Panel V3 - MedFormation</h1>
+        <p>Gérez : Folders, Dossiers, Questions, Épreuves, Cours</p>
+    </div>
+
+    <div class="container">
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('folders')">📁 Folders</button>
+            <button class="tab-btn" onclick="switchTab('dossiers')">📋 Dossiers</button>
+            <button class="tab-btn" onclick="switchTab('questions-create')">❓ Créer Questions</button>
+            <button class="tab-btn" onclick="switchTab('questions-view')">🔍 Visualiser Questions</button>
+            <button class="tab-btn" onclick="switchTab('epreuves')">🎯 Épreuves</button>
+            <button class="tab-btn" onclick="switchTab('add-course')">➕ Ajouter Cours</button>
+            <button class="tab-btn" onclick="switchTab('courses')">📚 Cours</button>
+            <button class="tab-btn" onclick="switchTab('data')">📊 Stats</button>
+        </div>
+
+        <!-- ============================================
+             TAB 1: FOLDERS
+             ============================================ -->
+        <div id="folders" class="tab-content active">
+            <div class="card">
+                <div class="card-title">➕ Créer un Folder</div>
+                <div id="folderAlert"></div>
+
+                <form onsubmit="addFolder(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nom du folder</label>
+                            <input type="text" id="folderName" placeholder="Ex: SCA Progressif" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Icône (emoji)</label>
+                            <input type="text" id="folderIcon" placeholder="❤️" maxlength="2" value="📁">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Couleur</label>
+                            <input type="color" id="folderColor" value="#2563EB">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" id="folderDescription" placeholder="Description">
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary">➕ Créer</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetFolderForm()">Réinitialiser</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📁 Folders existants</div>
+                <div id="folderList" class="loading">
+                    <div class="spinner"></div>
+                    Chargement...
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================
+             TAB 2: DOSSIERS
+             ============================================ -->
+        <div id="dossiers" class="tab-content">
+            <div class="card">
+                <div class="card-title">➕ Créer un Dossier</div>
+                <div id="dossierAlert"></div>
+
+                <form onsubmit="addDossier(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Titre</label>
+                            <input type="text" id="dossierTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Spécialité</label>
+                            <select id="dossierSpecialty" required>
+                                <option value="">-- Sélectionne --</option>
+                                <option value="Cardiologie">Cardiologie</option>
+                                <option value="Pneumologie">Pneumologie</option>
+                                <option value="Gastro-entérologie">Gastro-entérologie</option>
+                                <option value="Neurologie">Neurologie</option>
+                                <option value="Autre">Autre</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Folder (Organisateur)</label>
+                            <select id="dossierFolder">
+                                <option value="">-- Aucun --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Format</label>
+                            <select id="dossierFormat" required>
+                                <option value="DP">DP (Progressif)</option>
+                                <option value="QI">QI (Isolé)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Difficulté</label>
+                            <select id="dossierDifficulty" required>
+                                <option value="Facile">Facile</option>
+                                <option value="Moyen">Moyen</option>
+                                <option value="Difficile">Difficile</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Nombre de questions</label>
+                            <input type="number" id="dossierQuestionCount" min="1" max="50" value="4" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="dossierDescription"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="dossierFree"> Gratuit
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Durée estimée (min)</label>
+                            <input type="number" id="dossierTime" min="5" max="300" value="45">
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary">➕ Créer Dossier</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetDossierForm()">Réinitialiser</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📋 Dossiers existants</div>
+                <div id="dossierList" class="loading">
+                    <div class="spinner"></div>
+                    Chargement...
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================
+             TAB 3: CRÉER QUESTIONS
+             ============================================ -->
+        <div id="questions-create" class="tab-content">
+            <div class="card">
+                <div class="card-title">➕ Créer une Question</div>
+                <div id="questionAlert"></div>
+
+                <form onsubmit="addQuestion(event)">
+                    <div class="form-group">
+                        <label>Dossier</label>
+                        <select id="questionDossier" required>
+                            <option value="">-- Sélectionne un dossier --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Énoncé de la question</label>
+                        <textarea id="questionText" required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Numéro</label>
+                            <input type="number" id="questionNumber" min="1" value="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Difficulté</label>
+                            <select id="questionDifficulty">
+                                <option value="Facile">Facile</option>
+                                <option value="Moyen">Moyen</option>
+                                <option value="Difficile">Difficile</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Image question (URL)</label>
+                        <input type="url" id="questionImage" placeholder="https://...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="questionMultiple" checked> Plusieurs réponses possibles
+                        </label>
+                    </div>
+
+                    <!-- OPTIONS -->
+                    <div style="background: #F9FAFB; padding: 16px; border-radius: 8px; margin: 16px 0;">
+                        <h3 style="margin-bottom: 12px; color: #111827; font-size: 14px;">5 Propositions (A-E)</h3>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 100px; gap: 12px; margin-bottom: 12px;">
+                            <input type="text" id="optionA" placeholder="Proposition A" required>
+                            <label style="margin: 0;"><input type="checkbox" id="correctA"> Correct</label>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 100px; gap: 12px; margin-bottom: 12px;">
+                            <input type="text" id="optionB" placeholder="Proposition B" required>
+                            <label style="margin: 0;"><input type="checkbox" id="correctB"> Correct</label>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 100px; gap: 12px; margin-bottom: 12px;">
+                            <input type="text" id="optionC" placeholder="Proposition C" required>
+                            <label style="margin: 0;"><input type="checkbox" id="correctC"> Correct</label>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 100px; gap: 12px; margin-bottom: 12px;">
+                            <input type="text" id="optionD" placeholder="Proposition D" required>
+                            <label style="margin: 0;"><input type="checkbox" id="correctD"> Correct</label>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 100px; gap: 12px;">
+                            <input type="text" id="optionE" placeholder="Proposition E" required>
+                            <label style="margin: 0;"><input type="checkbox" id="correctE"> Correct</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Explication/Correction</label>
+                        <textarea id="questionExplanation"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Image correction (URL)</label>
+                        <input type="url" id="questionExplanationImage">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Références</label>
+                        <textarea id="questionReference"></textarea>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary">➕ Créer Question</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetQuestionForm()">Réinitialiser</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ============================================
+             TAB 4: VISUALISER QUESTIONS
+             ============================================ -->
+        <div id="questions-view" class="tab-content">
+            <div class="card">
+                <div class="card-title">🔍 Questions par Dossier</div>
+                <p style="color: #6B7280; margin-bottom: 20px; font-size: 14px;">Cliquez sur un dossier pour voir ses questions</p>
+                <div id="questionsTree" class="loading">
+                    <div class="spinner"></div>
+                    Chargement...
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================
+             TAB 5: ÉPREUVES
+             ============================================ -->
+        <div id="epreuves" class="tab-content">
+            <div class="card">
+                <div class="card-title">➕ Créer une Épreuve</div>
+                <div id="epreuveAlert"></div>
+
+                <form onsubmit="addEpreuve(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Titre de l'épreuve</label>
+                            <input type="text" id="epreuveTitle" placeholder="Ex: Concours Blanc Cardiologie" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Spécialité</label>
+                            <select id="epreuveSpecialty" required>
+                                <option value="">-- Sélectionne --</option>
+                                <option value="Cardiologie">Cardiologie</option>
+                                <option value="Pneumologie">Pneumologie</option>
+                                <option value="Gastro-entérologie">Gastro-entérologie</option>
+                                <option value="Neurologie">Neurologie</option>
+                                <option value="Autre">Autre</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Difficulté</label>
+                            <select id="epreveDifficulty" required>
+                                <option value="Facile">Facile</option>
+                                <option value="Moyen">Moyen</option>
+                                <option value="Difficile">Difficile</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Durée totale (min)</label>
+                            <input type="number" id="epreuveTime" min="15" max="480" value="60" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="epreuveDescription" placeholder="Description de l'épreuve"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="epreveFree"> Gratuit
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sélectionne les dossiers à inclure</label>
+                        <div class="dossier-select" id="epreuveDosiersSelect"></div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary">➕ Créer Épreuve</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetEpreuveForm()">Réinitialiser</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🎯 Épreuves existantes</div>
+                <div id="epreuveList" class="loading">
+                    <div class="spinner"></div>
+                    Chargement...
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================
+             TAB 6: AJOUTER COURS
+             ============================================ -->
+        <div id="add-course" class="tab-content">
+            <div class="card">
+                <div class="card-title">➕ Ajouter un Nouveau Cours</div>
+                <div id="addCourseAlert"></div>
+
+                <form onsubmit="addCourse(event)">
+                    <div class="form-group">
+                        <label>Titre du cours</label>
+                        <input type="text" id="courseName" placeholder="Ex: Anatomie Cardiaque" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Catégorie</label>
+                        <select id="courseCategory" required>
+                            <option value="">-- Sélectionne --</option>
+                            <option value="Cardiologie">Cardiologie</option>
+                            <option value="Pneumologie">Pneumologie</option>
+                            <option value="Gastro-entérologie">Gastro-entérologie</option>
+                            <option value="Neurologie">Neurologie</option>
+                            <option value="Autre">Autre</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="courseDescription" placeholder="Courte description du cours" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Durée estimée (minutes)</label>
+                        <input type="number" id="courseDuration" min="5" max="300" value="30" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>URL Notion Publique</label>
+                        <input type="url" id="notionUrl" placeholder="https://www.notion.so/Mon-Cours-xxxxx" required>
+                        <small style="color: #6B7280; display: block; margin-top: 8px;">
+                            💡 Copie l'URL depuis Notion après avoir cliqué sur "Share" → "Copy link"
+                        </small>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="courseFree"> Gratuit
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="coursePublish"> Publier immédiatement
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary">➕ Ajouter Cours</button>
+                        <button type="button" class="btn btn-secondary" onclick="resetCourseForm()">Réinitialiser</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ============================================
+             TAB 7: COURSES
+             ============================================ -->
+        <div id="courses" class="tab-content">
+            <div class="card">
+                <div class="card-title">📚 Cours Existants</div>
+                <div id="coursesList" class="loading">
+                    <div class="spinner"></div>
+                    Chargement...
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================
+             TAB 8: STATS
+             ============================================ -->
+        <div id="data" class="tab-content">
+            <div class="card">
+                <div class="card-title">📊 Statistiques</div>
+                <div id="dataStats" class="loading">
+                    <div class="spinner"></div>
+                    Chargement...
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        if (!localStorage.getItem('isLoggedIn')) {
+            window.location.href = 'login.html';
+        }
+
+        let epreuveSelectedDossiers = [];
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        window.addEventListener('load', () => {
+            loadFolders();
+            loadDossiers();
+            loadQuestionsTree();
+            loadEpreuves();
+            loadDossierSelects();
+            loadDataStats();
+            loadCoursesList();
+        });
+
+        // ============================================
+        // TAB NAVIGATION
+        // ============================================
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showAlert(id, msg, type = 'success') {
+            document.getElementById(id).innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+            setTimeout(() => document.getElementById(id).innerHTML = '', 4000);
+        }
+
+        // ============================================
+        // FOLDERS
+        // ============================================
+        async function addFolder(e) {
+            e.preventDefault();
+            const { error } = await supabaseClient.from('dossier_folders').insert([{
+                name: document.getElementById('folderName').value,
+                description: document.getElementById('folderDescription').value,
+                icon: document.getElementById('folderIcon').value,
+                color: document.getElementById('folderColor').value
+            }]);
+            if (error) showAlert('folderAlert', '❌ Erreur: ' + error.message, 'error');
+            else {
+                showAlert('folderAlert', '✅ Folder créé!', 'success');
+                resetFolderForm();
+                loadFolders();
+                loadDossierSelects();
+            }
+        }
+
+        async function loadFolders() {
+            const { data } = await supabaseClient.from('dossier_folders').select('*').order('created_at');
+            const html = data && data.length > 0 ? data.map(f => `
+                <div class="tree-item">
+                    <strong>${f.icon} ${f.name}</strong>
+                    <div style="font-size: 12px; color: #6B7280; margin-top: 4px;">${f.description || ''}</div>
+                    <div style="margin-top: 8px;">
+                        <button class="btn btn-danger btn-small" onclick="deleteFolder('${f.id}')">🗑️ Supprimer</button>
+                    </div>
+                </div>
+            `).join('') : '<p style="color: #6B7280;">Aucun folder</p>';
+            document.getElementById('folderList').innerHTML = html;
+        }
+
+        async function deleteFolder(id) {
+            if (!confirm('Confirme ?')) return;
+            const { error } = await supabaseClient.from('dossier_folders').delete().eq('id', id);
+            if (error) alert('Erreur: ' + error.message);
+            else {
+                loadFolders();
+                loadDossierSelects();
+            }
+        }
+
+        function resetFolderForm() {
+            document.getElementById('folderName').value = '';
+            document.getElementById('folderIcon').value = '📁';
+            document.getElementById('folderDescription').value = '';
+            document.getElementById('folderColor').value = '#2563EB';
+        }
+
+        // ============================================
+        // DOSSIERS
+        // ============================================
+        async function addDossier(e) {
+            e.preventDefault();
+            const { error } = await supabaseClient.from('dossiers').insert([{
+                title: document.getElementById('dossierTitle').value,
+                specialty: document.getElementById('dossierSpecialty').value,
+                folder_id: document.getElementById('dossierFolder').value || null,
+                format: document.getElementById('dossierFormat').value,
+                difficulty: document.getElementById('dossierDifficulty').value,
+                question_count: parseInt(document.getElementById('dossierQuestionCount').value),
+                description: document.getElementById('dossierDescription').value,
+                is_free: document.getElementById('dossierFree').checked,
+                estimated_time_minutes: parseInt(document.getElementById('dossierTime').value)
+            }]);
+            if (error) showAlert('dossierAlert', '❌ Erreur: ' + error.message, 'error');
+            else {
+                showAlert('dossierAlert', '✅ Dossier créé!', 'success');
+                resetDossierForm();
+                loadDossiers();
+                loadDossierSelects();
+            }
+        }
+
+        async function loadDossiers() {
+            const { data } = await supabaseClient.from('dossiers').select('*').order('created_at');
+            const html = data && data.length > 0 ? data.map(d => `
+                <div class="tree-item">
+                    <strong>${d.format === 'DP' ? '📋' : '❓'} ${d.title}</strong>
+                    <div style="font-size: 12px; color: #6B7280; margin-top: 4px;">${d.specialty} • ${d.difficulty} • ${d.question_count}Q</div>
+                </div>
+            `).join('') : '<p style="color: #6B7280;">Aucun dossier</p>';
+            document.getElementById('dossierList').innerHTML = html;
+        }
+
+        async function loadDossierSelects() {
+            const { data } = await supabaseClient.from('dossiers').select('id, title, format').order('title');
+            const select = document.getElementById('questionDossier');
+            const folderSelect = document.getElementById('dossierFolder');
+            const { data: folders } = await supabaseClient.from('dossier_folders').select('id, name').order('name');
+
+            folderSelect.innerHTML = '<option value="">-- Aucun --</option>' +
+                (folders ? folders.map(f => `<option value="${f.id}">${f.name}</option>`).join('') : '');
+
+            select.innerHTML = '<option value="">-- Sélectionne --</option>' +
+                (data ? data.map(d => `<option value="${d.id}">${d.format === 'DP' ? '📋' : '❓'} ${d.title}</option>`).join('') : '');
+
+            loadEpreuveDosiersSelect();
+        }
+
+        function resetDossierForm() {
+            document.getElementById('dossierTitle').value = '';
+            document.getElementById('dossierSpecialty').value = '';
+            document.getElementById('dossierFolder').value = '';
+            document.getElementById('dossierFormat').value = 'DP';
+            document.getElementById('dossierDifficulty').value = 'Moyen';
+            document.getElementById('dossierQuestionCount').value = '4';
+            document.getElementById('dossierDescription').value = '';
+            document.getElementById('dossierFree').checked = false;
+            document.getElementById('dossierTime').value = '45';
+        }
+
+        // ============================================
+        // QUESTIONS
+        // ============================================
+        async function addQuestion(e) {
+            e.preventDefault();
+            const { data: qData, error: qError } = await supabaseClient.from('questions').insert([{
+                dossier_id: document.getElementById('questionDossier').value,
+                question_text: document.getElementById('questionText').value,
+                question_number: parseInt(document.getElementById('questionNumber').value),
+                difficulty: document.getElementById('questionDifficulty').value,
+                image_url: document.getElementById('questionImage').value,
+                is_multiple_choice: document.getElementById('questionMultiple').checked,
+                explanation: document.getElementById('questionExplanation').value,
+                explanation_image_url: document.getElementById('questionExplanationImage').value,
+                reference: document.getElementById('questionReference').value
+            }]).select();
+
+            if (qError) {
+                showAlert('questionAlert', '❌ Erreur: ' + qError.message, 'error');
+                return;
+            }
+
+            const options = [];
+            ['A', 'B', 'C', 'D', 'E'].forEach(l => {
+                options.push({
+                    question_id: qData[0].id,
+                    option_letter: l,
+                    option_text: document.getElementById('option' + l).value,
+                    is_correct: document.getElementById('correct' + l).checked
+                });
+            });
+
+            const { error: oError } = await supabaseClient.from('options').insert(options);
+            if (oError) showAlert('questionAlert', '❌ Erreur: ' + oError.message, 'error');
+            else {
+                showAlert('questionAlert', '✅ Question créée!', 'success');
+                resetQuestionForm();
+                loadQuestionsTree();
+            }
+        }
+
+        async function loadQuestionsTree() {
+            const { data: dossiers } = await supabaseClient.from('dossiers').select('id, title, format').order('title');
+            
+            let html = '';
+            for (let dossier of dossiers || []) {
+                const { data: questions } = await supabaseClient
+                    .from('questions')
+                    .select('*, options(id)')
+                    .eq('dossier_id', dossier.id)
+                    .order('question_number');
+
+                html += `
+                    <div class="accordion">
+                        <div class="accordion-header">
+                            <span>${dossier.format === 'DP' ? '📋' : '❓'} ${dossier.title} (${questions?.length || 0}Q)</span>
+                            <span class="accordion-toggle">▼</span>
+                        </div>
+                        <div class="accordion-content">
+                            ${questions?.map(q => `
+                                <div class="tree-item" style="margin: 8px 0; border-left: 3px solid #A7F3D0;">
+                                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: 600; color: #111827;">Q${q.question_number}</div>
+                                            <div style="font-size: 12px; color: #6B7280; margin-top: 4px;">
+                                                ${q.question_text.substring(0, 60)}... • ${q.options?.length || 0} options
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-danger btn-small" onclick="deleteQuestion('${q.id}')">🗑️</button>
+                                    </div>
+                                </div>
+                            `).join('') || '<p style="color: #6B7280; padding: 12px;">Aucune question</p>'}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (!dossiers || dossiers.length === 0) {
+                html = '<p style="color: #6B7280; text-align: center; padding: 20px;">Aucun dossier créé</p>';
+            }
+
+            document.getElementById('questionsTree').innerHTML = html;
+            setupAccordions();
+        }
+
+        function setupAccordions() {
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    header.parentElement.classList.toggle('open');
+                });
+            });
+        }
+
+        async function deleteQuestion(id) {
+            if (!confirm('Confirme ?')) return;
+            const { error } = await supabaseClient.from('questions').delete().eq('id', id);
+            if (error) alert('Erreur: ' + error.message);
+            else loadQuestionsTree();
+        }
+
+        function resetQuestionForm() {
+            document.getElementById('questionDossier').value = '';
+            document.getElementById('questionText').value = '';
+            document.getElementById('questionNumber').value = '1';
+            document.getElementById('questionDifficulty').value = 'Moyen';
+            document.getElementById('questionImage').value = '';
+            document.getElementById('questionMultiple').checked = true;
+            ['A', 'B', 'C', 'D', 'E'].forEach(l => {
+                document.getElementById('option' + l).value = '';
+                document.getElementById('correct' + l).checked = false;
+            });
+            document.getElementById('questionExplanation').value = '';
+            document.getElementById('questionExplanationImage').value = '';
+            document.getElementById('questionReference').value = '';
+        }
+
+        // ============================================
+        // ÉPREUVES
+        // ============================================
+        async function loadEpreuveDosiersSelect() {
+            const { data } = await supabaseClient.from('dossiers').select('id, title, format').order('title');
+            const html = (data || []).map(d => `
+                <div style="display: inline-block; margin: 6px; padding: 8px 12px; background: #F3F4F6; border-radius: 6px; cursor: pointer; user-select: none; font-size: 13px; border: 2px solid transparent; transition: all 0.3s;"
+                    onclick="toggleEpreuveDossier('${d.id}', this)">
+                    ${d.format === 'DP' ? '📋' : '❓'} ${d.title}
+                </div>
+            `).join('');
+            document.getElementById('epreuveDosiersSelect').innerHTML = html;
+        }
+
+        function toggleEpreuveDossier(id, elem) {
+            if (epreuveSelectedDossiers.includes(id)) {
+                epreuveSelectedDossiers = epreuveSelectedDossiers.filter(d => d !== id);
+                elem.style.background = '#F3F4F6';
+                elem.style.color = '#374151';
+                elem.style.borderColor = 'transparent';
+            } else {
+                epreuveSelectedDossiers.push(id);
+                elem.style.background = '#EFF6FF';
+                elem.style.color = '#2563EB';
+                elem.style.borderColor = '#2563EB';
+            }
+        }
+
+        async function addEpreuve(e) {
+            e.preventDefault();
+            if (epreuveSelectedDossiers.length === 0) {
+                showAlert('epreuveAlert', '❌ Sélectionne au moins 1 dossier', 'error');
+                return;
+            }
+
+            const { data: epData, error: epError } = await supabaseClient.from('epreuves').insert([{
+                title: document.getElementById('epreuveTitle').value,
+                specialty: document.getElementById('epreuveSpecialty').value,
+                difficulty: document.getElementById('epreveDifficulty').value,
+                estimated_time_minutes: parseInt(document.getElementById('epreuveTime').value),
+                description: document.getElementById('epreuveDescription').value,
+                is_free: document.getElementById('epreveFree').checked
+            }]).select();
+
+            if (epError) {
+                showAlert('epreuveAlert', '❌ Erreur: ' + epError.message, 'error');
+                return;
+            }
+
+            const epreuveId = epData[0].id;
+            const links = epreuveSelectedDossiers.map((did, idx) => ({
+                epreuve_id: epreuveId,
+                dossier_id: did,
+                order_index: idx + 1
+            }));
+
+            const { error: linkError } = await supabaseClient.from('epreuve_dossiers').insert(links);
+            if (linkError) {
+                showAlert('epreuveAlert', '❌ Erreur lien: ' + linkError.message, 'error');
+            } else {
+                showAlert('epreuveAlert', '✅ Épreuve créée!', 'success');
+                resetEpreuveForm();
+                loadEpreuves();
+            }
+        }
+
+        async function loadEpreuves() {
+            const { data: epreuves } = await supabaseClient.from('epreuves').select('*').order('created_at');
+            let html = '';
+
+            for (let ep of epreuves || []) {
+                const { count } = await supabaseClient.from('epreuve_dossiers').select('*', { count: 'exact', head: true }).eq('epreuve_id', ep.id);
+                html += `
+                    <div class="tree-item">
+                        <strong>🎯 ${ep.title}</strong>
+                        <div style="font-size: 12px; color: #6B7280; margin-top: 4px;">${ep.specialty} • ${ep.difficulty} • ${count || 0} dossiers • ${ep.estimated_time_minutes}min</div>
+                        <div style="margin-top: 8px;">
+                            <button class="btn btn-danger btn-small" onclick="deleteEpreuve('${ep.id}')">🗑️ Supprimer</button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('epreuveList').innerHTML = html || '<p style="color: #6B7280;">Aucune épreuve</p>';
+        }
+
+        async function deleteEpreuve(id) {
+            if (!confirm('Confirme ?')) return;
+            const { error } = await supabaseClient.from('epreuves').delete().eq('id', id);
+            if (error) alert('Erreur: ' + error.message);
+            else loadEpreuves();
+        }
+
+        function resetEpreuveForm() {
+            document.getElementById('epreuveTitle').value = '';
+            document.getElementById('epreuveSpecialty').value = '';
+            document.getElementById('epreveDifficulty').value = 'Moyen';
+            document.getElementById('epreuveTime').value = '60';
+            document.getElementById('epreuveDescription').value = '';
+            document.getElementById('epreveFree').checked = false;
+            epreuveSelectedDossiers = [];
+            loadEpreuveDosiersSelect();
+        }
+
+        // ============================================
+        // COURSES
+        // ============================================
+        async function addCourse(e) {
+            e.preventDefault();
+            
+            const notionUrl = document.getElementById('notionUrl').value;
+            const { error } = await supabaseClient.from('courses').insert([{
+                title: document.getElementById('courseName').value,
+                category: document.getElementById('courseCategory').value,
+                description: document.getElementById('courseDescription').value,
+                estimated_time_minutes: parseInt(document.getElementById('courseDuration').value),
+                notion_url: notionUrl,
+                is_free: document.getElementById('courseFree').checked,
+                is_published: document.getElementById('coursePublish').checked,
+                content_html: '',
+                order_index: 0
+            }]);
+            
+            if (error) {
+                showAlert('addCourseAlert', '❌ Erreur: ' + error.message, 'error');
+            } else {
+                showAlert('addCourseAlert', '✅ Cours ajouté!', 'success');
+                resetCourseForm();
+                loadCoursesList();
+            }
+        }
+
+        async function loadCoursesList() {
+            try {
+                const { data: courses } = await supabaseClient
+                    .from('courses')
+                    .select('*')
+                    .order('order_index', { ascending: true });
+
+                const html = courses && courses.length > 0 ? courses.map(c => `
+                    <div class="tree-item">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div style="flex: 1;">
+                                <strong>📚 ${c.title}</strong>
+                                <div style="font-size: 12px; color: #6B7280; margin-top: 4px;">
+                                    ${c.category} • ${c.estimated_time_minutes} min
+                                    ${c.is_free ? '• 📖 Gratuit' : '• ⭐ Premium'}
+                                </div>
+                                <div style="font-size: 13px; color: #333; margin-top: 8px; line-height: 1.4;">
+                                    ${c.description || ''}
+                                </div>
+                                ${c.notion_url ? `<div style="font-size: 11px; color: #2563EB; margin-top: 8px;">
+                                    <a href="${c.notion_url}" target="_blank">🔗 Voir sur Notion</a>
+                                </div>` : ''}
+                            </div>
+                            <button onclick="deleteCourseItem('${c.id}')" class="btn btn-danger btn-small" style="white-space: nowrap;">
+                                🗑️ Supprimer
+                            </button>
+                        </div>
+                    </div>
+                `).join('') : '<p style="color: #6B7280;">Aucun cours</p>';
+                
+                document.getElementById('coursesList').innerHTML = html;
+            } catch (error) {
+                console.error('Erreur:', error);
+                document.getElementById('coursesList').innerHTML = '<p style="color: #EF4444;">Erreur de chargement</p>';
+            }
+        }
+
+        async function deleteCourseItem(courseId) {
+            if (!confirm('Confirme la suppression ?')) return;
+            
+            const { error } = await supabaseClient.from('courses').delete().eq('id', courseId);
+            if (error) {
+                alert('Erreur: ' + error.message);
+            } else {
+                loadCoursesList();
+            }
+        }
+
+        function resetCourseForm() {
+            document.getElementById('courseName').value = '';
+            document.getElementById('courseCategory').value = '';
+            document.getElementById('courseDescription').value = '';
+            document.getElementById('courseDuration').value = '30';
+            document.getElementById('notionUrl').value = '';
+            document.getElementById('courseFree').checked = false;
+            document.getElementById('coursePublish').checked = false;
+        }
+
+        // ============================================
+        // STATS
+        // ============================================
+        async function loadDataStats() {
+            const counts = {};
+            for (const table of ['dossier_folders', 'dossiers', 'questions', 'epreuves', 'courses']) {
+                const { count } = await supabaseClient.from(table).select('*', { count: 'exact', head: true });
+                counts[table] = count || 0;
+            }
+
+            document.getElementById('dataStats').innerHTML = `
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-value">${counts.dossier_folders}</div>
+                        <div class="stat-label">📁 Folders</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">${counts.dossiers}</div>
+                        <div class="stat-label">📋 Dossiers</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">${counts.questions}</div>
+                        <div class="stat-label">❓ Questions</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">${counts.epreuves}</div>
+                        <div class="stat-label">🎯 Épreuves</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">${counts.courses}</div>
+                        <div class="stat-label">📚 Cours</div>
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

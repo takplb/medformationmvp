@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QCM - MedFormation</title>
+    <title>QCM & Épreuves - MedFormation</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
     <style>
         * {
             margin: 0;
@@ -14,6 +16,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: #F9FAFB;
+            color: #374151;
             min-height: 100vh;
         }
 
@@ -36,521 +39,301 @@
             text-decoration: none;
         }
 
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: #2563EB;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 73px;
-            bottom: 0;
-            width: 260px;
-            background: white;
-            border-right: 1px solid #E5E7EB;
-            padding: 24px 0;
-            overflow-y: auto;
-        }
-
-        .nav-item {
-            padding: 12px 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #6B7280;
-            text-decoration: none;
-            transition: all 0.2s;
-            font-weight: 500;
-        }
-
-        .nav-item:hover {
-            background: #F9FAFB;
-            color: #2563EB;
-        }
-
-        .nav-item.active {
-            background: #EFF6FF;
-            color: #2563EB;
-            border-right: 3px solid #2563EB;
-        }
-
-        .main-content {
-            margin-left: 260px;
-            padding: 32px;
-        }
-
-        .page-header {
-            margin-bottom: 32px;
-        }
-
-        .page-header h1 {
-            font-size: 32px;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 8px;
-        }
-
-        .page-header p {
-            color: #6B7280;
-            font-size: 16px;
-        }
-
-        .filters {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 24px;
-            border: 1px solid #E5E7EB;
+        .header-right {
             display: flex;
             gap: 16px;
-            flex-wrap: wrap;
             align-items: center;
         }
 
-        .filter-group {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .filter-group label {
-            font-weight: 600;
-            color: #374151;
-            font-size: 14px;
-        }
-
-        .filter-group select {
-            padding: 8px 12px;
-            border: 2px solid #E5E7EB;
-            border-radius: 8px;
-            font-size: 14px;
-            background: white;
-            cursor: pointer;
-        }
-
-        .filter-group input {
-            padding: 8px 12px;
-            border: 2px solid #E5E7EB;
-            border-radius: 8px;
-            font-size: 14px;
-            min-width: 150px;
-        }
-
-        .mode-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .mode-card {
-            background: white;
-            border: 2px solid #E5E7EB;
-            border-radius: 16px;
-            padding: 32px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .mode-card:hover {
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transform: translateY(-4px);
-            border-color: #2563EB;
-        }
-
-        .mode-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-        }
-
-        .mode-card h2 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 12px;
-        }
-
-        .mode-card p {
-            color: #6B7280;
-            font-size: 16px;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .mode-features {
-            list-style: none;
-            margin-bottom: 24px;
-            text-align: left;
-        }
-
-        .mode-features li {
-            padding: 8px 0;
-            color: #6B7280;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .mode-features li::before {
-            content: "✓";
-            color: #10B981;
-            font-weight: 700;
-            font-size: 16px;
-        }
-
-        .btn-start {
-            background: #2563EB;
-            color: white;
-            padding: 12px 32px;
-            border-radius: 10px;
+        .btn-nav {
+            background: transparent;
+            color: #2563EB;
             border: none;
             cursor: pointer;
             font-weight: 600;
-            font-size: 16px;
+            padding: 8px 16px;
+            font-size: 14px;
             transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .btn-nav:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #111827;
+        }
+
+        .page-subtitle {
+            color: #6B7280;
+            font-size: 16px;
+            margin-bottom: 32px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid #E5E7EB;
+            padding-bottom: 0;
+            overflow-x: auto;
+        }
+
+        .tab-button {
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            color: #6B7280;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-size: 14px;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -1px;
+            white-space: nowrap;
+        }
+
+        .tab-button.active {
+            color: #2563EB;
+            border-bottom-color: #2563EB;
+        }
+
+        .tab-button:hover {
+            color: #2563EB;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: white;
+            border: 1px solid #E5E7EB;
+            color: #6B7280;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: #2563EB;
+            color: white;
+            border-color: #2563EB;
+        }
+
+        .filter-btn:hover {
+            border-color: #2563EB;
+            color: #2563EB;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card:hover {
+            border-color: #2563EB;
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.1);
+            transform: translateY(-4px);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #2563EB 0%, #1d4ed8 100%);
+            padding: 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .card-icon {
+            font-size: 40px;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            line-height: 1.4;
+        }
+
+        .card-body {
+            padding: 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-description {
+            font-size: 13px;
+            color: #6B7280;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+
+        .card-stats {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        .stat-icon {
+            font-size: 14px;
+        }
+
+        .card-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .tag {
+            background: #F3F4F6;
+            color: #6B7280;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            white-space: nowrap;
+        }
+
+        .tag.specialty {
+            background: #EFF6FF;
+            color: #2563EB;
+        }
+
+        .tag.difficulty {
+            background: #ECFDF5;
+            color: #10B981;
+        }
+
+        .tag.difficulty.hard {
+            background: #FEF2F2;
+            color: #EF4444;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        .btn-start {
             width: 100%;
+            padding: 10px;
+            background: #2563EB;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s;
         }
 
         .btn-start:hover {
             background: #1d4ed8;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
         }
 
-        .qcm-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .qcm-item {
-            background: white;
-            border: 1px solid #E5E7EB;
-            border-radius: 12px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .qcm-item:hover {
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .qcm-meta {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-            font-size: 12px;
-        }
-
-        .qcm-meta span {
-            background: #F3F4F6;
-            padding: 4px 10px;
-            border-radius: 16px;
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
             color: #6B7280;
         }
 
-        .qcm-number {
-            font-size: 14px;
-            font-weight: 600;
-            color: #2563EB;
-            margin-bottom: 8px;
-        }
-
-        .qcm-preview {
-            font-size: 14px;
-            color: #374151;
-            line-height: 1.5;
-            margin-bottom: 12px;
-            text-align: left;
-        }
-
-        .qcm-difficulty {
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .difficulty-easy {
-            color: #10B981;
-        }
-
-        .difficulty-medium {
-            color: #F59E0B;
-        }
-
-        .difficulty-hard {
-            color: #EF4444;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            overflow-y: auto;
-        }
-
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            max-width: 800px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            padding: 32px;
-            position: relative;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: #E5E7EB;
-            border: none;
+        .spinner {
+            border: 3px solid #E5E7EB;
+            border-top-color: #2563EB;
+            border-radius: 50%;
             width: 40px;
             height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
         }
 
-        .modal-close:hover {
-            background: #D1D5DB;
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
-        .question-header {
-            margin-bottom: 24px;
-        }
-
-        .question-number {
-            font-size: 14px;
-            color: #6B7280;
-            margin-bottom: 8px;
-        }
-
-        .question-text {
-            font-size: 18px;
-            font-weight: 600;
-            color: #111827;
-            line-height: 1.6;
-        }
-
-        .question-meta {
-            display: flex;
-            gap: 12px;
-            margin-top: 12px;
-            font-size: 13px;
-        }
-
-        .question-meta span {
-            background: #F3F4F6;
-            padding: 4px 12px;
-            border-radius: 20px;
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
             color: #6B7280;
         }
 
-        .options {
-            display: grid;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .option {
-            background: #F9FAFB;
-            border: 2px solid #E5E7EB;
-            border-radius: 10px;
-            padding: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .option:hover {
-            border-color: #2563EB;
-            background: #EFF6FF;
-        }
-
-        .option input[type="radio"] {
-            margin-top: 4px;
-            cursor: pointer;
-        }
-
-        .option label {
-            flex: 1;
-            cursor: pointer;
-            font-size: 16px;
-            color: #374151;
-        }
-
-        .option.correct {
-            border-color: #10B981;
-            background: #ECFDF5;
-        }
-
-        .option.incorrect {
-            border-color: #EF4444;
-            background: #FEF2F2;
-        }
-
-        .option.selected.correct {
-            border-color: #10B981;
-            background: #ECFDF5;
-        }
-
-        .option.selected.incorrect {
-            border-color: #EF4444;
-            background: #FEF2F2;
-        }
-
-        .explanation {
-            background: #F3F4F6;
-            border-left: 4px solid #2563EB;
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 24px;
-            display: none;
-        }
-
-        .explanation.show {
-            display: block;
-        }
-
-        .explanation h4 {
-            font-size: 14px;
-            font-weight: 600;
-            color: #111827;
-            margin-bottom: 8px;
-        }
-
-        .explanation p {
-            font-size: 14px;
-            color: #6B7280;
-            line-height: 1.6;
-        }
-
-        .references {
-            background: #FFFBEB;
-            border-left: 4px solid #F59E0B;
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 24px;
-            font-size: 14px;
-            color: #6B7280;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-        }
-
-        .btn-primary {
-            background: #2563EB;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-primary:hover {
-            background: #1d4ed8;
-        }
-
-        .btn-secondary {
-            background: #E5E7EB;
-            color: #374151;
-            padding: 12px 24px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-secondary:hover {
-            background: #D1D5DB;
-        }
-
-        .timer {
-            position: absolute;
-            top: 32px;
-            right: 32px;
-            background: #FEF3C7;
-            color: #92400E;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 16px;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 4px;
-            background: #E5E7EB;
-            border-radius: 2px;
-            margin-bottom: 24px;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: #2563EB;
-            width: 0%;
-            transition: width 0.3s;
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
         }
 
         @media (max-width: 768px) {
-            .sidebar {
-                display: none;
-            }
-
-            .main-content {
-                margin-left: 0;
-                padding: 16px;
-            }
-
-            .mode-grid {
+            .grid {
                 grid-template-columns: 1fr;
             }
 
-            .modal-content {
-                width: 95%;
-                padding: 20px;
+            .page-title {
+                font-size: 24px;
             }
 
-            .timer {
-                position: static;
-                margin-top: 16px;
+            .tabs {
+                gap: 6px;
+            }
+
+            .tab-button {
+                font-size: 12px;
+                padding: 10px 12px;
             }
         }
     </style>
@@ -558,565 +341,272 @@
 <body>
     <header class="header">
         <a href="dashboard.html" class="logo">🏥 MedFormation</a>
-        <div class="user-avatar" id="userAvatar">SM</div>
+        <div class="header-right">
+            <a href="admin-panel-v2.html" class="btn-nav">⚙️ Admin</a>
+            <a href="dashboard.html" class="btn-nav">← Retour</a>
+        </div>
     </header>
 
-    <aside class="sidebar">
-        <a href="dashboard.html" class="nav-item">
-            <span>🏠</span> Dashboard
-        </a>
-        <a href="courses.html" class="nav-item">
-            <span>📚</span> Cours
-        </a>
-        <a href="qcm.html" class="nav-item active">
-            <span>✏️</span> QCM
-        </a>
-        <a href="ecos.html" class="nav-item">
-            <span>🎯</span> ECOS
-        </a>
-        <a href="progress.html" class="nav-item">
-            <span>📊</span> Progression
-        </a>
-        <a href="account.html" class="nav-item">
-            <span>⚙️</span> Mon Compte
-        </a>
-    </aside>
+    <div class="container">
+        <div class="page-title">📚 Entraînement & Épreuves</div>
+        <div class="page-subtitle">Préparez-vous avec nos dossiers et épreuves</div>
 
-    <main class="main-content">
-        <div class="page-header">
-            <h1>✏️ QCM d'entraînement</h1>
-            <p>Testez vos connaissances avec nos questions d'entraînement et examens blancs</p>
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('epreuves')">🎯 Épreuves</button>
+            <button class="tab-button" onclick="switchTab('dossiers')">📋 Dossiers</button>
         </div>
 
-        <!-- Mode Selection -->
-        <div id="modeSelection">
-            <div class="mode-grid">
-                <div class="mode-card" onclick="startTrainingMode()">
-                    <div class="mode-icon">🎯</div>
-                    <h2>Mode Entraînement</h2>
-                    <p>Répondez à des questions avec corrections immédiates pour progresser à votre rythme</p>
-                    <ul class="mode-features">
-                        <li>Correction immédiate</li>
-                        <li>Explications détaillées</li>
-                        <li>Retour interactif</li>
-                        <li>Sans chrono</li>
-                    </ul>
-                    <button class="btn-start">Commencer l'entraînement</button>
-                </div>
-
-                <div class="mode-card" onclick="startExamMode()">
-                    <div class="mode-icon">⏱️</div>
-                    <h2>Mode Examen Blanc</h2>
-                    <p>Simulez une véritable épreuve avec chronométrage et correction en fin de session</p>
-                    <ul class="mode-features">
-                        <li>Chronométrage réaliste (45 min)</li>
-                        <li>30 questions variées</li>
-                        <li>Pas de corrections pendant</li>
-                        <li>Résultats détaillés</li>
-                    </ul>
-                    <button class="btn-start">Démarrer un examen</button>
-                </div>
-            </div>
-
+        <!-- ============================================
+             TAB 1: ÉPREUVES
+             ============================================ -->
+        <div id="epreuves" class="tab-content active">
             <!-- Filtres -->
-            <div class="filters">
-                <div class="filter-group">
-                    <label for="specialtyFilter">Spécialité :</label>
-                    <select id="specialtyFilter">
-                        <option value="">Toutes</option>
-                        <option value="Cardiologie">Cardiologie</option>
-                        <option value="Pneumologie">Pneumologie</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="difficultyFilter">Difficulté :</label>
-                    <select id="difficultyFilter">
-                        <option value="">Toutes</option>
-                        <option value="Facile">Facile</option>
-                        <option value="Moyen">Moyen</option>
-                        <option value="Difficile">Difficile</option>
-                    </select>
-                </div>
-            </div>
+            <div class="filters" id="epreuveFilters"></div>
 
-            <!-- QCM List -->
-            <h2 style="font-size: 24px; font-weight: 700; color: #111827; margin: 32px 0 20px;">Questions disponibles</h2>
-            <div class="qcm-list" id="qcmList"></div>
-        </div>
-
-        <!-- Training Mode -->
-        <div id="trainingMode" style="display: none;">
-            <div class="modal" id="trainingModal" style="display: flex;">
-                <div class="modal-content">
-                    <button class="modal-close" onclick="exitMode()">✕</button>
-                    
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
-                    </div>
-
-                    <div class="question-header">
-                        <div class="question-number" id="questionNumber">Question 1 / 10</div>
-                        <div class="question-text" id="questionText"></div>
-                        <div class="question-meta">
-                            <span id="questionSpecialty">Cardiologie</span>
-                            <span id="questionDifficulty">Moyen</span>
-                        </div>
-                    </div>
-
-                    <div class="options" id="optionsContainer"></div>
-
-                    <div class="explanation" id="explanation">
-                        <h4>📚 Explication</h4>
-                        <p id="explanationText"></p>
-                    </div>
-
-                    <div class="references" id="references" style="display: none;">
-                        <strong>📖 Références :</strong>
-                        <p id="referencesText"></p>
-                    </div>
-
-                    <div class="btn-group">
-                        <button class="btn-secondary" onclick="previousQuestion()" id="prevBtn">← Précédent</button>
-                        <button class="btn-primary" onclick="nextQuestion()" id="nextBtn">Suivant →</button>
-                        <button class="btn-primary" onclick="finishTraining()" id="finishBtn" style="display: none;">Terminer</button>
-                    </div>
+            <!-- Grille d'épreuves -->
+            <div class="grid" id="eprevuesGrid">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Chargement...
                 </div>
             </div>
         </div>
 
-        <!-- Results Modal -->
-        <div class="modal" id="resultsModal">
-            <div class="modal-content">
-                <button class="modal-close" onclick="backToHome()">✕</button>
-                <h2 style="font-size: 28px; font-weight: 700; margin-bottom: 24px;" id="resultsTitle">Résultats de l'examen</h2>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 32px;">
-                    <div style="background: #EFF6FF; padding: 20px; border-radius: 12px; text-align: center;">
-                        <div style="font-size: 36px; font-weight: 700; color: #2563EB;" id="scoreDisplay">0/10</div>
-                        <div style="font-size: 14px; color: #6B7280; margin-top: 8px;">Score obtenu</div>
-                    </div>
-                    <div style="background: #ECFDF5; padding: 20px; border-radius: 12px; text-align: center;">
-                        <div style="font-size: 36px; font-weight: 700; color: #10B981;" id="percentageDisplay">0%</div>
-                        <div style="font-size: 14px; color: #6B7280; margin-top: 8px;">Taux de réussite</div>
-                    </div>
-                    <div style="background: #F3E8FF; padding: 20px; border-radius: 12px; text-align: center;">
-                        <div style="font-size: 36px; font-weight: 700; color: #A855F7;" id="timeDisplay">0 min</div>
-                        <div style="font-size: 14px; color: #6B7280; margin-top: 8px;">Temps écoulé</div>
-                    </div>
-                </div>
+        <!-- ============================================
+             TAB 2: DOSSIERS
+             ============================================ -->
+        <div id="dossiers" class="tab-content">
+            <!-- Filtres -->
+            <div class="filters" id="dossierFilters"></div>
 
-                <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 16px;">Détail par question</h3>
-                <div id="detailedResults" style="max-height: 400px; overflow-y: auto; margin-bottom: 24px;"></div>
-
-                <div style="display: flex; gap: 12px;">
-                    <button class="btn-secondary" onclick="backToHome()">Retour</button>
-                    <button class="btn-primary" onclick="retryExam()">Recommencer</button>
+            <!-- Grille de dossiers -->
+            <div class="grid" id="dossiersGrid">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    Chargement...
                 </div>
             </div>
         </div>
-    </main>
+    </div>
 
     <script>
-        // Check login
+        // Vérifier connexion
         if (!localStorage.getItem('isLoggedIn')) {
             window.location.href = 'login.html';
         }
 
-        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-        if (currentUser.firstName && currentUser.lastName) {
-            const initials = currentUser.firstName.charAt(0) + currentUser.lastName.charAt(0);
-            document.getElementById('userAvatar').textContent = initials.toUpperCase();
+        let allEpreuves = [];
+        let filteredEpreuves = [];
+        let allDossiers = [];
+        let filteredDossiers = [];
+        let currentEpreuveFilter = 'all';
+        let currentDossierFilter = 'all';
+
+        window.addEventListener('load', () => {
+            loadEpreuves();
+            loadDossiers();
+        });
+
+        // ============================================
+        // TAB NAVIGATION
+        // ============================================
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
         }
 
-        // QCM Database
-        const qcmDatabase = [
-            {
-                id: 1,
-                question: "Un patient de 65 ans présente une douleur thoracique constrictive. L'ECG montre un sus-décalage du segment ST en antérieur. Quelle est la prise en charge immédiate ?",
-                specialty: "Cardiologie",
-                topic: "Syndrome coronarien aigu",
-                difficulty: "Moyen",
-                options: [
-                    { letter: "A", text: "Aspirine + clopidogrel puis observation" },
-                    { letter: "B", text: "Aspirine + coronarographie en urgence (angioplastie primaire)" },
-                    { letter: "C", text: "Thrombolyse puis coronarographie à 48h" },
-                    { letter: "D", text: "ECG de contrôle dans 1 heure" }
-                ],
-                correctAnswer: "B",
-                explanation: "En cas de STEMI (sus-décalage), l'angioplastie primaire en urgence (< 120 min) est le traitement de référence. Elle réduit la mortalité et les complications.",
-                references: "ESC Guidelines 2023 - Acute Coronary Syndromes. Objectif : Délai porte-ballonnet < 120 min."
-            },
-            {
-                id: 2,
-                question: "Quels sont les facteurs de vulnérabilité d'une plaque d'athérome ?",
-                specialty: "Cardiologie",
-                topic: "Syndrome coronarien aigu",
-                difficulty: "Facile",
-                options: [
-                    { letter: "A", text: "Cœur lipidique important et chape fibreuse fine" },
-                    { letter: "B", text: "Cœur lipidique petit et chape fibreuse épaisse" },
-                    { letter: "C", text: "Hypocholestérolémie et absence de tabagisme" },
-                    { letter: "D", text: "Fibrinémie basse" }
-                ],
-                correctAnswer: "A",
-                explanation: "Les plaques vulnérables (à risque de rupture) sont caractérisées par un cœur lipidique important et une chape fibreuse fine, rendant la plaque instable.",
-                references: "Pathophysiologie du SCA - Item 339"
-            },
-            {
-                id: 3,
-                question: "Quel est l'examen diagnostique de première intention dans un SCA suspecté ?",
-                specialty: "Cardiologie",
-                topic: "Syndrome coronarien aigu",
-                difficulty: "Facile",
-                options: [
-                    { letter: "A", text: "Échocardiographie" },
-                    { letter: "B", text: "ECG 12 dérivations" },
-                    { letter: "C", text: "Coronarographie d'emblée" },
-                    { letter: "D", text: "Scintigraphie myocardique" }
-                ],
-                correctAnswer: "B",
-                explanation: "L'ECG 12 dérivations est l'examen de première intention à réaliser en < 10 minutes. Il oriente le diagnostic et la prise en charge (STEMI vs NSTEMI).",
-                references: "Prise en charge du SCA - Recommandations ESC"
-            },
-            {
-                id: 4,
-                question: "Quel est le délai objectif idéal 'symptôme-ballon' pour une angioplastie primaire ?",
-                specialty: "Cardiologie",
-                topic: "Syndrome coronarien aigu",
-                difficulty: "Moyen",
-                options: [
-                    { letter: "A", text: "< 30 minutes" },
-                    { letter: "B", text: "< 60 minutes" },
-                    { letter: "C", text: "< 120 minutes" },
-                    { letter: "D", text: "< 180 minutes" }
-                ],
-                correctAnswer: "C",
-                explanation: "Le délai porte-ballon doit être < 120 minutes depuis l'apparition des symptômes. Ce délai critique est déterminant pour la réduction de la mortalité.",
-                references: "Time-to-intervention crucial dans le STEMI"
-            },
-            {
-                id: 5,
-                question: "Quels biomarqueurs confirment un infarctus du myocarde ?",
-                specialty: "Cardiologie",
-                topic: "Syndrome coronarien aigu",
-                difficulty: "Moyen",
-                options: [
-                    { letter: "A", text: "CRP et procalcitonine seules" },
-                    { letter: "B", text: "Troponine I ou T ultrasensible (élevée)" },
-                    { letter: "C", text: "Glutamate déshydrogénase seule" },
-                    { letter: "D", text: "LDH seule (> 400)" }
-                ],
-                correctAnswer: "B",
-                explanation: "La troponine ultrasensible est le marqueur clé pour confirmer l'IM. Elle augmente en 3-4h et reste élevée 7-14 jours.",
-                references: "Diagnostic de l'IM - Critères universels"
-            },
-            {
-                id: 6,
-                question: "Un patient se présente avec douleur thoracique, ECG normal, troponine négative à H0 et H3. Quel diagnostic considérez-vous ?",
-                specialty: "Cardiologie",
-                topic: "Syndrome coronarien aigu",
-                difficulty: "Difficile",
-                options: [
-                    { letter: "A", text: "Infarctus du myocarde certain" },
-                    { letter: "B", text: "Angine de poitrine instable (troponine négative)" },
-                    { letter: "C", text: "Aorte normale, pas de SCA" },
-                    { letter: "D", text: "Décès myocardique exclu" }
-                ],
-                correctAnswer: "B",
-                explanation: "ECG normal + troponine négative (H0, H3) = pas d'IM. Mais la douleur thoracique suggère une angine instable (SCA). Recontrôle troponine à H6 possible.",
-                references: "Diagnostic différentiel du SCA"
-            },
-            {
-                id: 7,
-                question: "Quelle est la cause majeure de mortalité précoce post-IM ?",
-                specialty: "Cardiologie",
-                topic: "Complications du SCA",
-                difficulty: "Moyen",
-                options: [
-                    { letter: "A", text: "Rupture de papillaire" },
-                    { letter: "B", text: "Troubles du rythme ventriculaire (TV/FV)" },
-                    { letter: "C", text: "Épanchement péricardique massif" },
-                    { letter: "D", text: "Insuffisance mitrale légère" }
-                ],
-                correctAnswer: "B",
-                explanation: "La mort subite par arythmie (TV/FV) est la cause majeure de mortalité précoce post-IM, particulièrement dans les 24-48 premières heures.",
-                references: "Complications précoces du SCA"
-            },
-            {
-                id: 8,
-                question: "Quel est le traitement anticoagulant standard initial dans un STEMI traité par angioplastie ?",
-                specialty: "Cardiologie",
-                topic: "Traitement du SCA",
-                difficulty: "Moyen",
-                options: [
-                    { letter: "A", text: "HBPM seule (énoxaparine)" },
-                    { letter: "B", text: "HNF en bolus + perfusion continue" },
-                    { letter: "C", text: "Anticoagulants oraux (warfarine)" },
-                    { letter: "D", text: "Fondaparinux seul" }
-                ],
-                correctAnswer: "B",
-                explanation: "L'HNF (non fractionnée) en bolus puis perfusion est préférable pour l'angioplastie car elle a une demi-vie courte et peut être antagonisée.",
-                references: "Protocole anticoagulation STEMI"
-            },
-            {
-                id: 9,
-                question: "Combien de temps faut-il maintenir la double antiagrégation (Aspirine + P2Y12) après un IM ?",
-                specialty: "Cardiologie",
-                topic: "Traitement long terme",
-                difficulty: "Facile",
-                options: [
-                    { letter: "A", text: "1 mois" },
-                    { letter: "B", text: "3 mois" },
-                    { letter: "C", text: "12 mois minimum" },
-                    { letter: "D", text: "6 mois" }
-                ],
-                correctAnswer: "C",
-                explanation: "La double antiagrégation (Aspirine à vie + P2Y12 inhibiteur minimum 12 mois) est recommandée pour prévenir la resténose et les événements récurrents.",
-                references: "Prévention secondaire post-IM"
-            },
-            {
-                id: 10,
-                question: "Quel LDL-cholestérol faut-il atteindre après un IM ?",
-                specialty: "Cardiologie",
-                topic: "Prévention secondaire",
-                difficulty: "Moyen",
-                options: [
-                    { letter: "A", text: "< 1,40 g/L" },
-                    { letter: "B", text: "< 1,0 g/L" },
-                    { letter: "C", text: "< 0,55 g/L" },
-                    { letter: "D", text: "< 2,0 g/L" }
-                ],
-                correctAnswer: "C",
-                explanation: "L'objectif LDL-C post-IM est < 0,55 g/L (< 1,4 mmol/L) selon les guidelines. Cet objectif agressif réduit les événements cardiovasculaires.",
-                references: "Objectifs thérapeutiques lipidiques post-IM"
+        // ============================================
+        // ÉPREUVES
+        // ============================================
+        async function loadEpreuves() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('epreuves')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                allEpreuves = data || [];
+                filteredEpreuves = allEpreuves;
+                
+                displayEpreuves();
+                displayEpreuveFilters();
+            } catch (err) {
+                console.error('Erreur:', err);
+                document.getElementById('eprevuesGrid').innerHTML = 
+                    '<div class="empty"><div class="empty-icon">❌</div><p>Erreur de chargement</p></div>';
             }
-        ];
-
-        let currentQuestionIndex = 0;
-        let mode = null;
-        let answers = {};
-        let startTime = null;
-        let selectedQuestions = [];
-
-        // Display QCM list
-        function displayQCMList() {
-            const qcmList = document.getElementById('qcmList');
-            qcmList.innerHTML = '';
-
-            qcmDatabase.forEach((qcm, index) => {
-                const card = document.createElement('div');
-                card.className = 'qcm-item';
-                card.onclick = () => startSingleQuestion(index);
-                card.innerHTML = `
-                    <div class="qcm-number">Question ${qcm.id}</div>
-                    <div class="qcm-meta">
-                        <span>${qcm.specialty}</span>
-                        <span class="difficulty-${qcm.difficulty === 'Facile' ? 'easy' : qcm.difficulty === 'Moyen' ? 'medium' : 'hard'}">${qcm.difficulty}</span>
-                    </div>
-                    <div class="qcm-preview">${qcm.question.substring(0, 80)}...</div>
-                    <div class="qcm-difficulty difficulty-${qcm.difficulty === 'Facile' ? 'easy' : qcm.difficulty === 'Moyen' ? 'medium' : 'hard'}">
-                        ${qcm.difficulty}
-                    </div>
-                `;
-                qcmList.appendChild(card);
-            });
         }
 
-        function startTrainingMode() {
-            mode = 'training';
-            selectedQuestions = [...qcmDatabase];
-            currentQuestionIndex = 0;
-            answers = {};
-            startTime = Date.now();
-            
-            document.getElementById('modeSelection').style.display = 'none';
-            document.getElementById('trainingMode').style.display = 'block';
-            document.getElementById('trainingModal').style.display = 'flex';
-            
-            loadQuestion();
+        function displayEpreuveFilters() {
+            const specialties = [...new Set(allEpreuves.map(e => e.specialty))];
+            const html = specialties.map(s => 
+                `<button class="filter-btn" onclick="filterEpreuveBySpecialty('${s}')">${s}</button>`
+            ).join('');
+            document.getElementById('epreuveFilters').innerHTML = html;
         }
 
-        function startExamMode() {
-            mode = 'exam';
-            selectedQuestions = qcmDatabase.slice(0, 10); // Simulate 10 questions for exam
-            currentQuestionIndex = 0;
-            answers = {};
-            startTime = Date.now();
+        function filterEpreuveBySpecialty(specialty) {
+            currentEpreuveFilter = specialty === currentEpreuveFilter ? 'all' : specialty;
+            applyEpreuveFilters();
             
-            document.getElementById('modeSelection').style.display = 'none';
-            document.getElementById('trainingMode').style.display = 'block';
-            document.getElementById('trainingModal').style.display = 'flex';
-            
-            loadQuestion();
-        }
-
-        function startSingleQuestion(index) {
-            mode = 'training';
-            selectedQuestions = [qcmDatabase[index]];
-            currentQuestionIndex = 0;
-            answers = {};
-            startTime = Date.now();
-            
-            document.getElementById('modeSelection').style.display = 'none';
-            document.getElementById('trainingMode').style.display = 'block';
-            document.getElementById('trainingModal').style.display = 'flex';
-            
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            const question = selectedQuestions[currentQuestionIndex];
-            
-            document.getElementById('questionNumber').textContent = `Question ${currentQuestionIndex + 1} / ${selectedQuestions.length}`;
-            document.getElementById('questionText').textContent = question.question;
-            document.getElementById('questionSpecialty').textContent = question.specialty;
-            document.getElementById('questionDifficulty').textContent = question.difficulty;
-
-            const optionsContainer = document.getElementById('optionsContainer');
-            optionsContainer.innerHTML = '';
-
-            question.options.forEach(option => {
-                const div = document.createElement('div');
-                div.className = 'option';
-                div.innerHTML = `
-                    <input type="radio" id="option${option.letter}" name="answer" value="${option.letter}">
-                    <label for="option${option.letter}">${option.letter}. ${option.text}</label>
-                `;
-                div.onclick = () => selectOption(option.letter);
-                optionsContainer.appendChild(div);
-
-                if (answers[currentQuestionIndex] === option.letter) {
-                    div.querySelector('input').checked = true;
+            document.querySelectorAll('#epreuveFilters .filter-btn').forEach(btn => {
+                if (btn.textContent === specialty) {
+                    btn.classList.toggle('active');
                 }
             });
-
-            // Update progress
-            const progress = ((currentQuestionIndex + 1) / selectedQuestions.length) * 100;
-            document.getElementById('progressFill').style.width = progress + '%';
-
-            // Hide explanation initially
-            document.getElementById('explanation').classList.remove('show');
-            document.getElementById('references').style.display = 'none';
-
-            // Update buttons
-            document.getElementById('prevBtn').style.display = currentQuestionIndex > 0 ? 'block' : 'none';
-            document.getElementById('nextBtn').style.display = currentQuestionIndex < selectedQuestions.length - 1 ? 'block' : 'none';
-            document.getElementById('finishBtn').style.display = currentQuestionIndex === selectedQuestions.length - 1 ? 'block' : 'none';
         }
 
-        function selectOption(letter) {
-            answers[currentQuestionIndex] = letter;
-            const question = selectedQuestions[currentQuestionIndex];
-            const isCorrect = letter === question.correctAnswer;
+        function applyEpreuveFilters() {
+            filteredEpreuves = allEpreuves.filter(e => {
+                return currentEpreuveFilter === 'all' || e.specialty === currentEpreuveFilter;
+            });
+            displayEpreuves();
+        }
 
-            // Show visual feedback
-            const options = document.querySelectorAll('.option');
-            options.forEach(opt => {
-                const input = opt.querySelector('input');
-                const label = opt.querySelector('label').textContent;
-                const answerLetter = label.charAt(0);
+        async function displayEpreuves() {
+            const html = filteredEpreuves.length > 0 ? 
+                (await Promise.all(filteredEpreuves.map(async e => {
+                    const { count } = await supabaseClient.from('epreuve_dossiers').select('*', { count: 'exact', head: true }).eq('epreuve_id', e.id);
+                    return `
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-icon">🎯</div>
+                                <div class="card-title">${e.title}</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-description">${e.description || ''}</div>
+                                <div class="card-stats">
+                                    <div class="stat">
+                                        <span class="stat-icon">📋</span>
+                                        <span>${count || 0} dossiers</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-icon">⏱️</span>
+                                        <span>${e.estimated_time_minutes} min</span>
+                                    </div>
+                                </div>
+                                <div class="card-tags">
+                                    <div class="tag specialty">${e.specialty}</div>
+                                    <div class="tag difficulty ${e.difficulty === 'Difficile' ? 'hard' : ''}">${e.difficulty}</div>
+                                    ${e.is_free ? '<div class="tag">📖 Gratuit</div>' : '<div class="tag">⭐ Premium</div>'}
+                                </div>
+                                <div class="card-footer">
+                                    <button class="btn-start" onclick="startEpreuve('${e.id}', '${e.title}')">
+                                        Démarrer →
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                })))
+                .join('') 
+                : '<div class="empty"><div class="empty-icon">📭</div><p>Aucune épreuve</p></div>';
 
-                if (input.checked) {
-                    opt.classList.add('selected');
-                    if (isCorrect) {
-                        opt.classList.add('correct');
-                    } else {
-                        opt.classList.add('incorrect');
-                    }
+            document.getElementById('eprevuesGrid').innerHTML = html;
+        }
+
+        async function startEpreuve(epreuveId, title) {
+            localStorage.setItem('examEpreuveId', epreuveId);
+            localStorage.setItem('examEpreuveTitle', title);
+            window.location.href = 'qcm-epreuve.html';
+        }
+
+        // ============================================
+        // DOSSIERS
+        // ============================================
+        async function loadDossiers() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('dossiers')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                allDossiers = data || [];
+                filteredDossiers = allDossiers;
+                
+                displayDossiers();
+                displayDossierFilters();
+            } catch (err) {
+                console.error('Erreur:', err);
+                document.getElementById('dossiersGrid').innerHTML = 
+                    '<div class="empty"><div class="empty-icon">❌</div><p>Erreur de chargement</p></div>';
+            }
+        }
+
+        function displayDossierFilters() {
+            const specialties = [...new Set(allDossiers.map(d => d.specialty))];
+            const html = specialties.map(s => 
+                `<button class="filter-btn" onclick="filterDossierBySpecialty('${s}')">${s}</button>`
+            ).join('');
+            document.getElementById('dossierFilters').innerHTML = html;
+        }
+
+        function filterDossierBySpecialty(specialty) {
+            currentDossierFilter = specialty === currentDossierFilter ? 'all' : specialty;
+            applyDossierFilters();
+            
+            document.querySelectorAll('#dossierFilters .filter-btn').forEach(btn => {
+                if (btn.textContent === specialty) {
+                    btn.classList.toggle('active');
                 }
             });
-
-            // Show explanation in training mode
-            if (mode === 'training') {
-                document.getElementById('explanationText').textContent = question.explanation;
-                document.getElementById('explanation').classList.add('show');
-                document.getElementById('referencesText').textContent = question.references;
-                document.getElementById('references').style.display = 'block';
-            }
         }
 
-        function nextQuestion() {
-            if (currentQuestionIndex < selectedQuestions.length - 1) {
-                currentQuestionIndex++;
-                loadQuestion();
-            }
-        }
-
-        function previousQuestion() {
-            if (currentQuestionIndex > 0) {
-                currentQuestionIndex--;
-                loadQuestion();
-            }
-        }
-
-        function finishTraining() {
-            showResults();
-        }
-
-        function showResults() {
-            let score = 0;
-            const detailedResults = document.getElementById('detailedResults');
-            detailedResults.innerHTML = '';
-
-            selectedQuestions.forEach((question, index) => {
-                const isCorrect = answers[index] === question.correctAnswer;
-                if (isCorrect) score++;
-
-                const resultItem = document.createElement('div');
-                resultItem.style.cssText = 'background: #F9FAFB; padding: 16px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid ' + (isCorrect ? '#10B981' : '#EF4444') + ';';
-                resultItem.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
-                        <span style="font-size: 20px;">${isCorrect ? '✓' : '✗'}</span>
-                        <strong>Question ${index + 1}</strong>
-                        <span style="color: #6B7280; font-size: 14px;">${isCorrect ? 'Correcte' : 'Incorrecte'}</span>
-                    </div>
-                    <div style="font-size: 14px; color: #6B7280; margin-bottom: 8px;">${question.question}</div>
-                    <div style="font-size: 14px; background: white; padding: 8px; border-radius: 4px;">
-                        Votre réponse: <strong>${answers[index]}</strong> | Réponse correcte: <strong>${question.correctAnswer}</strong>
-                    </div>
-                `;
-                detailedResults.appendChild(resultItem);
+        function applyDossierFilters() {
+            filteredDossiers = allDossiers.filter(d => {
+                return currentDossierFilter === 'all' || d.specialty === currentDossierFilter;
             });
-
-            const percentage = Math.round((score / selectedQuestions.length) * 100);
-            document.getElementById('scoreDisplay').textContent = `${score}/${selectedQuestions.length}`;
-            document.getElementById('percentageDisplay').textContent = `${percentage}%`;
-
-            const timeElapsed = Math.round((Date.now() - startTime) / 1000 / 60);
-            document.getElementById('timeDisplay').textContent = `${timeElapsed} min`;
-
-            // Update stats
-            let stats = JSON.parse(localStorage.getItem('userStats') || '{"videosWatched": 0, "qcmCompleted": 0, "successRate": 0, "streak": 0}');
-            stats.qcmCompleted = (stats.qcmCompleted || 0) + 1;
-            stats.successRate = Math.round(((stats.successRate * (stats.qcmCompleted - 1) + percentage) / stats.qcmCompleted));
-            localStorage.setItem('userStats', JSON.stringify(stats));
-
-            document.getElementById('trainingModal').style.display = 'none';
-            document.getElementById('resultsModal').classList.add('active');
+            displayDossiers();
         }
 
-        function retryExam() {
-            document.getElementById('resultsModal').classList.remove('active');
-            if (mode === 'exam') {
-                startExamMode();
-            } else {
-                startTrainingMode();
-            }
+        function displayDossiers() {
+            const html = filteredDossiers.length > 0 ? filteredDossiers.map(d => `
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">${d.format === 'DP' ? '📋' : '❓'}</div>
+                        <div class="card-title">${d.title}</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-description">${d.description || ''}</div>
+                        <div class="card-stats">
+                            <div class="stat">
+                                <span class="stat-icon">❓</span>
+                                <span>${d.question_count} questions</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-icon">⏱️</span>
+                                <span>${d.estimated_time_minutes} min</span>
+                            </div>
+                        </div>
+                        <div class="card-tags">
+                            <div class="tag specialty">${d.specialty}</div>
+                            <div class="tag difficulty ${d.difficulty === 'Difficile' ? 'hard' : ''}">${d.difficulty}</div>
+                            ${d.is_free ? '<div class="tag">📖 Gratuit</div>' : '<div class="tag">⭐ Premium</div>'}
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn-start" onclick="startDossier('${d.id}', '${d.title}')">
+                                Démarrer →
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('') : '<div class="empty"><div class="empty-icon">📭</div><p>Aucun dossier</p></div>';
+
+            document.getElementById('dossiersGrid').innerHTML = html;
         }
 
-        function exitMode() {
-            document.getElementById('trainingMode').style.display = 'none';
-            document.getElementById('resultsModal').classList.remove('active');
-            document.getElementById('modeSelection').style.display = 'block';
-            displayQCMList();
+        function startDossier(dossierId, title) {
+            localStorage.setItem('examDossierId', dossierId);
+            localStorage.setItem('examTitle', title);
+            window.location.href = 'qcm-exam.html';
         }
-
-        function backToHome() {
-            exitMode();
-        }
-
-        // Initial display
-        displayQCMList();
     </script>
 </body>
 </html>
