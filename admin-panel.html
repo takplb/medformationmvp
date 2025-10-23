@@ -1131,24 +1131,34 @@
         // ============================================
         async function addCourse(e) {
             e.preventDefault();
-            
+
             const notionUrl = document.getElementById('notionUrl').value;
+
+            // Validation de l'URL Notion
+            if (!notionUrl || !notionUrl.includes('notion.so')) {
+                showAlert('addCourseAlert', '❌ Veuillez entrer une URL Notion valide', 'error');
+                return;
+            }
+
+            // Insertion dans la base de données
             const { error } = await supabaseClient.from('courses').insert([{
                 title: document.getElementById('courseName').value,
                 category: document.getElementById('courseCategory').value,
+                specialty: document.getElementById('courseCategory').value,
                 description: document.getElementById('courseDescription').value,
                 estimated_time_minutes: parseInt(document.getElementById('courseDuration').value),
                 notion_url: notionUrl,
                 is_free: document.getElementById('courseFree').checked,
                 is_published: document.getElementById('coursePublish').checked,
                 content_html: '',
-                order_index: 0
+                order_index: 0,
+                icon: '📚'
             }]);
-            
+
             if (error) {
                 showAlert('addCourseAlert', '❌ Erreur: ' + error.message, 'error');
             } else {
-                showAlert('addCourseAlert', '✅ Cours ajouté!', 'success');
+                showAlert('addCourseAlert', '✅ Cours ajouté avec succès!', 'success');
                 resetCourseForm();
                 loadCoursesList();
             }

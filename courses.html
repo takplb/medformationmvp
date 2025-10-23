@@ -543,175 +543,43 @@
             document.getElementById('userAvatar').textContent = initials.toUpperCase();
         }
 
-        // Base de données des cours
-        const coursesDatabase = [
-            {
-                id: 1,
-                title: "Syndrome Coronarien Aigu (Item 339)",
-                specialty: "Cardiologie",
-                topic: "Cardiologie",
-                difficulty: "Moyen",
-                duration: 1260,
-                thumbnail: "❤️",
-                is_free: true,
-                description: "Cours complet sur le syndrome coronarien aigu : physiopathologie, diagnostic, traitement d'urgence",
-                fullContent: `
-                    <h2>Syndrome Coronarien Aigu (Item 339) - Cardiologie</h2>
-                    
-                    <div class="course-section">
-                        <h3>1. Bases physiopathologiques</h3>
-                        <ul>
-                            <li>Le SCA est une manifestation aiguë de la maladie athéromateuse coronarienne</li>
-                            <li>Rupture d'une plaque d'athérome → thrombose intraluminal</li>
-                            <li>Occlusion ± complète du vaisseau → ischémie myocardique → nécrose</li>
-                            <li>Plaques vulnérables : cœur lipidique important, chape fibreuse fine</li>
-                            <li>Facteurs de vulnérabilité : hypercholestérolémie, tabac, hyperfibrinémie</li>
-                        </ul>
-                    </div>
+        // Base de données des cours (chargée depuis Supabase)
+        let coursesDatabase = [];
 
-                    <div class="course-section">
-                        <h3>2. Définitions essentielles</h3>
-                        <ul>
-                            <li><strong>Infarctus du myocarde (IM) :</strong> Nécrose de cardiomyocytes en contexte d'ischémie aiguë</li>
-                            <li><strong>Diagnostic d'IM :</strong> Troponine élevée + critères d'ischémie (symptômes, ECG, imagerie)</li>
-                            <li><strong>SCA ST+ (STEMI) :</strong> Sus-décalage persistant du segment ST</li>
-                            <li><strong>SCA ST- (NSTE-ACS) :</strong> Absence de sus-décalage persistant du ST</li>
-                            <li><strong>Types d'IM :</strong> Type 1 (athérothrombotique), Type 2 (déséquilibre apport/besoins)</li>
-                        </ul>
-                    </div>
+        // Charger les cours depuis Supabase
+        async function loadCoursesFromDatabase() {
+            try {
+                const { data: courses, error } = await supabaseClient
+                    .from('courses')
+                    .select('*')
+                    .eq('is_published', true)
+                    .order('order_index', { ascending: true });
 
-                    <div class="course-section">
-                        <h3>3. Clinique</h3>
-                        <ul>
-                            <li><strong>Douleur angineuse typique :</strong> Rétrosternale, constrictive, irradiant bras gauche/cou</li>
-                            <li><strong>Présentations atypiques :</strong> Plus fréquentes chez les âgés, femmes, diabétiques</li>
-                            <li><strong>Équivalents angineux :</strong> Dyspnée, asthénie, malaise</li>
-                            <li><strong>Facteurs déclenchants :</strong> Effort, stress, froid, effort violent</li>
-                            <li><strong>Examen physique :</strong> Souvent normal en l'absence de complication</li>
-                        </ul>
-                    </div>
+                if (error) {
+                    console.error('Erreur chargement cours:', error);
+                    return;
+                }
 
-                    <div class="course-section">
-                        <h3>4. Diagnostic paraclinique</h3>
-                        <ul>
-                            <li><strong>ECG 12 dérivations :</strong> Examen de première intention à réaliser < 10 min</li>
-                            <li><strong>SCA ST+ :</strong> Sus-décalage ≥ 1-2 mm pendant ≥ 2 dérivations contiguës</li>
-                            <li><strong>SCA ST- :</strong> Sous-décalage, sus-décalage transitoire, ou ECG normal possible</li>
-                            <li><strong>Troponine ultrasensible :</strong> Marqueur clé pour confirmé l'IM (dosage initial + H1 ou H2)</li>
-                            <li><strong>Autres biomarqueurs :</strong> Myoglobine, CK-MB, BNP/NT-proBNP</li>
-                        </ul>
-                    </div>
+                // Transformer les données pour correspondre au format attendu
+                coursesDatabase = courses.map(course => ({
+                    id: course.id,
+                    title: course.title,
+                    specialty: course.specialty || course.category || 'Général',
+                    topic: course.category || 'Général',
+                    difficulty: course.difficulty || 'Moyen',
+                    duration: (course.estimated_time_minutes || course.duration_minutes || 30) * 60,
+                    thumbnail: course.icon || '📚',
+                    is_free: course.is_free || false,
+                    description: course.description || 'Cours disponible',
+                    notion_url: course.notion_url || null,
+                    fullContent: course.content_html || `<h2>${course.title}</h2><p>${course.description}</p>`
+                }));
 
-                    <div class="course-section">
-                        <h3>5. Prise en charge initiale</h3>
-                        <ul>
-                            <li><strong>Appel au 15 :</strong> Le geste le plus salvateur (FMC-to-balloon < 120 min)</li>
-                            <li><strong>SCA ST+ :</strong> Angioplastie primaire (préféré à fibrinolyse si délai respecté)</li>
-                            <li><strong>SCA ST- :</strong> Coronarographie selon le risque (immédiate si très haut risque)</li>
-                            <li><strong>Traitement médical initial :</strong> Aspirine IVD + HNF + oxygène + morphine si besoin</li>
-                            <li><strong>Anticoagulation :</strong> HNF ou HBPM selon délai jusqu'à revascularisation</li>
-                        </ul>
-                    </div>
-
-                    <div class="course-section">
-                        <h3>6. Complications précoces</h3>
-                        <ul>
-                            <li><strong>Troubles du rythme :</strong> ESV, TV, FV (cause majeure de décès précoce)</li>
-                            <li><strong>Troubles de conduction :</strong> BAV nodal (inférieur, réversible) vs infranodal (antérieur, grave)</li>
-                            <li><strong>Insuffisance cardiaque aiguë :</strong> OAP, choc cardiogénique (classification de Killip)</li>
-                            <li><strong>Complications mécaniques :</strong> Rupture de pilier mitral, CIV, rupture de paroi libre</li>
-                            <li><strong>Infarctus du VD :</strong> Extension de l'infarctus inférieur (hypotension + turgescence jugulaire)</li>
-                        </ul>
-                    </div>
-
-                    <div class="course-section">
-                        <h3>7. Prise en charge au long cours</h3>
-                        <ul>
-                            <li><strong>Aspirine à vie</strong> + P2Y12 inhibiteur 12 mois</li>
-                            <li><strong>Statines forte dose :</strong> Objectif LDL < 0,55 g/L</li>
-                            <li><strong>IEC/ARA2 :</strong> Si FEVG ≤ 40 %, diabète, IRC</li>
-                            <li><strong>Bêtabloquants :</strong> Si FEVG ≤ 40 %</li>
-                            <li><strong>Contrôle des FDR :</strong> Sevrage tabagique, régime méditerranéen, activité physique</li>
-                            <li><strong>Suivi :</strong> Réadaptation cardiaque, surveillance FEVG, prévention secondaire</li>
-                        </ul>
-                    </div>
-
-                    <div class="course-section">
-                        <h3>📊 Points clés à retenir</h3>
-                        <ul>
-                            <li>Appel au 15 immédiatement = geste salvateur n°1</li>
-                            <li>ECG rapidement (< 10 min) = diagnostic initial</li>
-                            <li>SCA ST+ = urgence coronarienne < 120 min</li>
-                            <li>Troponine + ECG = diagnostic d'IM confirmé</li>
-                            <li>Revascularisation précoce = réduction de la mortalité</li>
-                            <li>Traitement médical de fond = prévention secondaire essentielle</li>
-                        </ul>
-                    </div>
-
-                    <button class="btn-download" onclick="downloadCoursePDF()">📥 Télécharger la fiche PDF</button>
-                `
-            },
-            {
-                id: 2,
-                title: "Insuffisance cardiaque",
-                specialty: "Cardiologie",
-                topic: "Cardiologie",
-                difficulty: "Moyen",
-                duration: 900,
-                thumbnail: "💔",
-                is_free: false,
-                description: "Physiopathologie, diagnostic et traitement de l'insuffisance cardiaque",
-                fullContent: `<h2>Insuffisance cardiaque</h2><p>Contenu à remplir - Vidéo premium</p>`
-            },
-            {
-                id: 3,
-                title: "Fibrillation atriale",
-                specialty: "Cardiologie",
-                topic: "Arythmies",
-                difficulty: "Moyen",
-                duration: 780,
-                thumbnail: "⚡",
-                is_free: false,
-                description: "Diagnostic et prise en charge de la fibrillation atriale",
-                fullContent: `<h2>Fibrillation atriale</h2><p>Contenu à remplir - Vidéo premium</p>`
-            },
-            {
-                id: 4,
-                title: "Hypertension artérielle",
-                specialty: "Cardiologie",
-                topic: "Hypertension",
-                difficulty: "Facile",
-                duration: 640,
-                thumbnail: "📈",
-                is_free: true,
-                description: "Diagnostic et suivi de l'hypertension artérielle",
-                fullContent: `<h2>Hypertension artérielle</h2><p>Contenu à remplir - Vidéo gratuite</p>`
-            },
-            {
-                id: 5,
-                title: "Dyslipidémie et athérosclérose",
-                specialty: "Cardiologie",
-                topic: "Métabolisme",
-                difficulty: "Difficile",
-                duration: 1020,
-                thumbnail: "🧬",
-                is_free: false,
-                description: "Physiopathologie de l'athérosclérose et gestion des dyslipidémies",
-                fullContent: `<h2>Dyslipidémie et athérosclérose</h2><p>Contenu à remplir - Vidéo premium</p>`
-            },
-            {
-                id: 6,
-                title: "Prise en charge de l'asthme",
-                specialty: "Pneumologie",
-                topic: "Asthme",
-                difficulty: "Moyen",
-                duration: 850,
-                thumbnail: "🫁",
-                is_free: true,
-                description: "Diagnostic et traitement de l'asthme selon les guidelines",
-                fullContent: `<h2>Prise en charge de l'asthme</h2><p>Contenu à remplir - Vidéo gratuite</p>`
+                displayCourses();
+            } catch (err) {
+                console.error('Erreur:', err);
             }
-        ];
+        }
 
         // Fonction pour afficher les cours
         function displayCourses(courses = coursesDatabase) {
@@ -769,15 +637,27 @@
 
         // Fonction pour ouvrir le modal du cours
         function openCourseModal(course) {
+            // Si le cours a une URL Notion, ouvrir dans un nouvel onglet
+            if (course.notion_url) {
+                window.open(course.notion_url, '_blank');
+
+                // Sauvegarder la progression
+                let stats = JSON.parse(localStorage.getItem('userStats') || '{"videosWatched": 0, "qcmCompleted": 0, "successRate": 0, "streak": 0}');
+                stats.videosWatched = (stats.videosWatched || 0) + 1;
+                localStorage.setItem('userStats', JSON.stringify(stats));
+                return;
+            }
+
+            // Sinon afficher le modal classique
             const modal = document.getElementById('courseModal');
             const courseDetailsContent = document.getElementById('courseDetailsContent');
-            
+
             // Mettre à jour le contenu
             courseDetailsContent.innerHTML = course.fullContent;
-            
+
             // Afficher le modal
             modal.classList.add('active');
-            
+
             // Sauvegarder la progression
             let stats = JSON.parse(localStorage.getItem('userStats') || '{"videosWatched": 0, "qcmCompleted": 0, "successRate": 0, "streak": 0}');
             stats.videosWatched = (stats.videosWatched || 0) + 1;
@@ -842,8 +722,8 @@
             displayCourses(filtered);
         }
 
-        // Affichage initial
-        displayCourses();
+        // Affichage initial - Charger depuis Supabase
+        loadCoursesFromDatabase();
     </script>
 </body>
 </html>
